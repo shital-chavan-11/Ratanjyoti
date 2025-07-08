@@ -3,20 +3,20 @@ import { v4 as uuid } from 'uuid';
 import { Link as RouterLink } from 'react-router-dom';
 import Slider from 'react-slick';
 
-import mehndiLeft from '@/assets/images/left.png';
-import mehndiRight from '@/assets/images/left1.png';
+import mehndiLeft from '@/assets/images/common/left.png';
+import mehndiRight from '@/assets/images/common/left1.png';
 
-import bitcoin1 from '@/assets/images/emerald.jpg';
-import bitcoin2 from '@/assets/images/sapphire.jpg';
-import bitcoin3 from '@/assets/images/rubygem.jpg';
-import bitcoin4 from '@/assets/images/products/safar.jpg';
+import bitcoin1 from '@/assets/images/gemstones/emerald.jpg';
+import bitcoin2 from '@/assets/images/gemstones/sapphire.jpg';
+import bitcoin3 from '@/assets/images/gemstones/rubygem.jpg';
+import bitcoin4 from '@/assets/images/gemstones/safar.jpg';
 
 // Products data
 const productsData = [
-	{ id: 1, name: 'Emerald', productImg: bitcoin1, link: '/secure' },
-	{ id: 2, name: 'Yellow Sapphire', productImg: bitcoin2, link: '/secure' },
-	{ id: 3, name: 'Ruby', productImg: bitcoin3, link: '/secure' },
-	{ id: 4, name: 'Blue Sapphire', productImg: bitcoin4, link: '/secure' },
+	{ id: 1, name: 'Emerald', productImg: bitcoin1, link: '/emerald-(panna)' },
+	{ id: 2, name: 'Yellow Sapphire', productImg: bitcoin2, link: '/yellow-sapphire-(pukhraj)' },
+	{ id: 3, name: 'Ruby', productImg: bitcoin3, link: '/ruby-(manik)' },
+	{ id: 4, name: 'Blue Sapphire', productImg: bitcoin4, link: '/blue-sapphire-(neelam)' },
 ];
 
 // Purchases data
@@ -112,7 +112,7 @@ function Gemstone() {
 			</Stack>
 
 			<Box textAlign="center" mt={4}>
-				<RouterLink to="/page" style={{ textDecoration: 'none' }}>
+				<RouterLink to="/maingem" style={{ textDecoration: 'none' }}>
 					<Button variant="contained">View All Products</Button>
 				</RouterLink>
 			</Box>

@@ -1,40 +1,109 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
-// MUI
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
-import Badge from '@mui/material/Badge';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-import Button from '@mui/material/Button';
-import Avatar from '@mui/material/Avatar';
-import ButtonBase from '@mui/material/ButtonBase';
-// Icons
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+
+import {
+	Typography,
+	Tooltip,
+	Box,
+	Badge,
+	IconButton,
+	Menu,
+	Stack,
+	Divider,
+	Button,
+	Avatar,
+	ButtonBase,
+} from '@mui/material';
+
 import CloseIcon from '@mui/icons-material/Close';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
-// data
-import notifications from '@/_mocks/notifications';
+import FavouriteIcon from '@mui/icons-material/FavoriteOutlined';
+
+const BASE_URL = 'http://localhost:8000'; // Update for production
 
 function NotificationsButton() {
 	const navigate = useNavigate();
 	const [anchorEl, setAnchorEl] = useState(null);
+	const [likes, setLikes] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	const open = Boolean(anchorEl);
+
+	const isTokenValid = (token) => {
+		try {
+			const decoded = jwtDecode(token);
+			return decoded.exp > Math.floor(Date.now() / 1000);
+		} catch {
+			return false;
+		}
+	};
+
+	const getAccessToken = () => {
+		const access = localStorage.getItem('accessToken');
+		return access && isTokenValid(access) ? access : null;
+	};
+
 	const handleClick = (event) => {
+		const access = getAccessToken();
+		if (!access) {
+			navigate('/pages/login/simple', { state: { from: '/likes' } });
+			return;
+		}
 		setAnchorEl(event.currentTarget);
 	};
+
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
-	const toNotifications = () => {
-		handleClose();
-		navigate('/pages/notifications');
-	};
+
+	useEffect(() => {
+		const fetchLikes = async () => {
+			const token = getAccessToken();
+			if (!token) {
+				setIsAuthenticated(false);
+				return;
+			}
+
+			setIsAuthenticated(true);
+			setLoading(true);
+
+			try {
+				const res = await axios.get(`${BASE_URL}/order/user/likes/`, {
+					headers: { Authorization: `Bearer ${token}` },
+				});
+				setLikes(res.data.likes || []);
+			} catch (err) {
+				console.error('Failed to load likes:', err);
+				setIsAuthenticated(false);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		fetchLikes();
+	}, []);
+
+	// ✅ Move conditional rendering logic outside JSX
+	let content;
+	if (loading) {
+		content = (
+			<Typography variant="body2" color="text.secondary">
+				Loading...
+			</Typography>
+		);
+	} else if (likes.length > 0) {
+		content = likes.slice(0, 5).map((item) => <LikeItem key={`${item.type}-${item.id}`} item={item} />);
+	} else {
+		content = (
+			<Typography variant="body2" color="text.secondary">
+				No liked items found.
+			</Typography>
+		);
+	}
 
 	return (
 		<>
@@ -42,35 +111,13 @@ function NotificationsButton() {
 				anchorEl={anchorEl}
 				open={open}
 				onClose={handleClose}
-				MenuListProps={{
-					'aria-labelledby': 'notificaciones menu',
-				}}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'right',
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'right',
-				}}
+				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 			>
-				<Stack
-					sx={{
-						maxWidth: 400,
-						p: 2,
-						pb: 0,
-					}}
-					direction="column"
-					spacing={2}
-				>
-					<Stack direction="row" justifyContent="space-between" flexWrap="wrap">
-						<Stack
-							direction="row"
-							alignItems="center"
-							spacing={1}
-							divider={<Divider orientation="vertical" flexItem />}
-						>
-							<Typography variant="subtitle1">Notificaciones</Typography>
+				<Stack sx={{ maxWidth: 400, p: 2, pb: 0 }} spacing={2}>
+					<Stack direction="row" justifyContent="space-between">
+						<Stack direction="row" spacing={1} divider={<Divider orientation="vertical" flexItem />}>
+							<Typography variant="subtitle1">Wishlist</Typography>
 							<Box
 								component="span"
 								bgcolor="secondary.main"
@@ -80,56 +127,45 @@ function NotificationsButton() {
 								py={0.5}
 								color="secondary.contrastText"
 							>
-								3
+								{likes.length}
 							</Box>
 						</Stack>
-						<Button
-							variant="text"
-							color="primary"
-							size="small"
-							sx={{
-								fontSize: 11,
-							}}
-						>
-							Marcar como leidas
-						</Button>
-						<IconButton
-							aria-label="close notifications menu"
-							onClick={handleClose}
-							size="small"
-							color="primary"
-							sx={{
-								border: 1,
-								display: {
-									sm: 'none',
-									xs: 'inline-flex',
-								},
-							}}
-						>
+
+						<IconButton onClick={handleClose} size="small" color="primary" sx={{ border: 1 }}>
 							<CloseIcon fontSize="inherit" />
 						</IconButton>
 					</Stack>
 
-					<Divider
-						sx={{
-							my: 1,
-						}}
-					/>
+					<Divider sx={{ my: 1 }} />
 
-					<Stack direction="column" spacing={1} divider={<Divider flexItem />}>
-						{notifications.slice(0, 5).map((notification) => (
-							<Notification key={notification.id} notification={notification} />
-						))}
+					<Stack spacing={1} divider={<Divider flexItem />}>
+						{content}
 					</Stack>
-					<Button variant="text" color="primary" size="small" fullWidth onClick={toNotifications}>
-						Ver todas las notificaciones
+
+					<Button
+						variant="text"
+						color="primary"
+						size="small"
+						fullWidth
+						onClick={() => {
+							handleClose();
+							navigate('/likes');
+						}}
+					>
+						View All Liked Items
 					</Button>
 				</Stack>
 			</Menu>
-			<Tooltip title="Notificaciones">
+
+			<Tooltip title="Wishlist">
 				<IconButton onClick={handleClick} size="small">
-					<Badge color="secondary" overlap="rectangular" variant="dot">
-						<NotificationsOutlinedIcon color="primary" fontSize="small" />
+					<Badge
+						color="secondary"
+						overlap="rectangular"
+						variant="dot"
+						invisible={!isAuthenticated || likes.length === 0}
+					>
+						<FavouriteIcon color="primary" fontSize="small" />
 					</Badge>
 				</IconButton>
 			</Tooltip>
@@ -137,44 +173,30 @@ function NotificationsButton() {
 	);
 }
 
-function Notification({ notification }) {
+function LikeItem({ item }) {
 	return (
 		<ButtonBase
 			sx={{
 				py: 1,
 				px: 2,
+				width: '100%',
+				textAlign: 'left',
+				borderLeft: 3,
+				borderLeftColor: 'primary.main',
 				'&:hover': {
 					bgcolor: (theme) => alpha(theme.palette.primary.light, 0.1),
 				},
-				borderLeft: 3,
-				borderLeftColor: notification?.checked ? '#d3d3d3' : 'primary.400',
 			}}
 		>
-			<Stack width="100%" direction="row" spacing={2} alignItems="center" justifyContent="flex-start">
-				<Avatar
-					alt="Perfil"
-					/* src={`https://picsum.photos/200/300?random=${Math.random()}`} */
-					src={notification?.avatar}
-					sx={{
-						width: 50,
-						height: 50,
-						boxShadow: 2,
-					}}
-				/>
-
-				<Stack direction="column" justifyContent="flex-start" alignItems="flex-start">
-					<Typography align="left">
-						<strong>{notification?.name} </strong>
-						{notification?.title}
+			<Stack direction="row" spacing={2} alignItems="center">
+				<Avatar>{item.name?.charAt(0)}</Avatar>
+				<Stack>
+					<Typography variant="body2">
+						<strong>{item.name}</strong> ({item.type})
 					</Typography>
-					<Typography variant="caption">
-						<AccessTimeIcon
-							fontSize="inherit"
-							sx={{
-								mr: 0.3,
-							}}
-						/>
-						{notification?.date}
+					<Typography variant="caption" color="text.secondary">
+						<AccessTimeIcon fontSize="inherit" sx={{ mr: 0.3 }} />
+						{item.liked_at}
 					</Typography>
 				</Stack>
 			</Stack>

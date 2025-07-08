@@ -6,11 +6,11 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CardActionArea from '@mui/material/CardActionArea';
 
-import bitcoin1 from '@/assets/images/gemstones.jpg';
-import bitcoin2 from '@/assets/images/bracelet.jpg';
-import bitcoin3 from '@/assets/images/rudra1.webp';
-import mehndiLeft from '@/assets/images/left.png'; // custom mehndi design
-import mehndiRight from '@/assets/images/left1.png'; // custom mehndi design
+import bitcoin1 from '@/assets/images/gemstones/gemstones.jpg';
+import bitcoin2 from '@/assets/images/bracelets/bracelet.jpg';
+import bitcoin3 from '@/assets/images/rudra/rudra1.webp';
+import mehndiLeft from '@/assets/images/common/left.png'; // custom mehndi design
+import mehndiRight from '@/assets/images/common/left1.png'; // custom mehndi design
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -19,19 +19,19 @@ const BITCOIN_CARDS = [
 		img: bitcoin1,
 		title: 'Gemstones',
 		buttonText: 'see more',
-		link: '/secure',
+		link: '/maingem',
 	},
 	{
 		img: bitcoin3,
 		title: 'Rudraksha',
 		buttonText: 'see more',
-		link: '/exchange',
+		link: '/main',
 	},
 	{
 		img: bitcoin2,
 		title: 'Bracelets',
 		buttonText: 'see more',
-		link: '/fast-transactions',
+		link: '/mainbrace',
 	},
 ];
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
-import mehndiLeft from '@/assets/images/left.png';
-import mehndiRight from '@/assets/images/left1.png';
+import mehndiLeft from '@/assets/images/common/left.png';
+import mehndiRight from '@/assets/images/common/left1.png';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Autoplay } from 'swiper/modules';

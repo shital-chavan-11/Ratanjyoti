@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Box, CardActionArea, Typography, Button, Dialog, DialogContent } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import { v4 as uuid } from 'uuid';
 
@@ -10,8 +10,8 @@ import 'slick-carousel/slick/slick-theme.css';
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import mehndiLeft from '@/assets/images/left.png';
-import mehndiRight from '@/assets/images/left1.png';
+import mehndiLeft from '@/assets/images/common/left.png';
+import mehndiRight from '@/assets/images/common/left1.png';
 
 // Images
 import brace1 from '../../../assets/images/bracelets/brace1.avif';
@@ -27,11 +27,17 @@ import brace444 from '../../../assets/images/bracelets/brace444.webp';
 import brace555 from '../../../assets/images/bracelets/brace555.webp';
 
 const SLIDER_ITEMS = [
-	{ id: uuid(), name: 'Dhan Yog Bracelet', image: brace1, hoverImage: brace111, link: '/opal' },
-	{ id: uuid(), name: 'Dhan Yog Bracelet', image: brace2, hoverImage: brace222, link: '/opal' },
-	{ id: uuid(), name: 'Amethyst Bracelet', image: brace3, hoverImage: brace333, link: '/topaz' },
-	{ id: uuid(), name: 'Green Aventurine Bracelet', image: brace4, hoverImage: brace444, link: '/amethyst' },
-	{ id: uuid(), name: "Cat's Eye Bracelet", image: brace5, hoverImage: brace555, link: '/peridot' },
+	{ id: uuid(), name: 'Dhan Yog Bracelet', image: brace1, hoverImage: brace111, link: '/dhan-yog-bracelet' },
+	{ id: uuid(), name: 'Amethyst Bracelet', image: brace2, hoverImage: brace222, link: '/amethyst-bracelet' },
+	{
+		id: uuid(),
+		name: 'Green Aventurine Bracelet',
+		image: brace3,
+		hoverImage: brace333,
+		link: '/green-aventurine-bracelet',
+	},
+	{ id: uuid(), name: "Cat's Eye Bracelet", image: brace4, hoverImage: brace444, link: "/cat's-eye-bracelet" },
+	{ id: uuid(), name: 'Pyrite Bracelet', image: brace5, hoverImage: brace555, link: '/pyrite-bracelet' },
 ];
 
 function NextArrow({ onClick }) {
@@ -152,6 +158,7 @@ function ImageSliderOnly() {
 	const [modalStartIndex, setModalStartIndex] = useState(0);
 	const [hoverIndex, setHoverIndex] = useState(null);
 	const sliderRef = useRef();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		if (modalOpen && sliderRef.current) {
@@ -159,9 +166,8 @@ function ImageSliderOnly() {
 		}
 	}, [modalOpen, modalStartIndex]);
 
-	const handleImageClick = (index) => {
-		setModalStartIndex(index);
-		setModalOpen(true);
+	const handleImageClick = (item) => {
+		navigate(item.link);
 	};
 
 	return (
@@ -181,7 +187,7 @@ function ImageSliderOnly() {
 				{SLIDER_ITEMS.map((item, index) => (
 					<Box key={item.id} sx={{ px: 1 }}>
 						<CardActionArea
-							onClick={() => handleImageClick(index)}
+							onClick={() => handleImageClick(item)}
 							onMouseEnter={() => setHoverIndex(index)}
 							onMouseLeave={() => setHoverIndex(null)}
 							sx={{
@@ -221,7 +227,7 @@ function ImageSliderOnly() {
 
 			{/* See More Button */}
 			<Box textAlign="center" mt={4}>
-				<RouterLink to="/page" style={{ textDecoration: 'none' }}>
+				<RouterLink to="/mainbrace" style={{ textDecoration: 'none' }}>
 					<Button variant="contained">See More</Button>
 				</RouterLink>
 			</Box>

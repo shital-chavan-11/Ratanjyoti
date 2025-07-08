@@ -223,9 +223,9 @@ function Footer() {
 								>
 									About Us
 								</Link>
-								<Link href="/our-story" underline="hover" color="text.primary">
+								{/* <Link href="/our-story" underline="hover" color="text.primary">
 									Our Story
-								</Link>
+								</Link> */}
 							</Stack>
 						</Stack>
 					</Grid>
@@ -268,19 +268,23 @@ function Footer() {
 							<Stack spacing={1} mt={2}>
 								<Typography variant="h6">Policies</Typography>
 								<Link
-									href="/slim-free-react-mui-template/pages/return-policy"
+									href="/slim-free-react-mui-template/refund-policy"
 									underline="hover"
 									color="text.primary"
 								>
-									Return Policy
+									Refund Policy
 								</Link>
-								<Link href="/shipping-policy" underline="hover" color="text.primary">
+								{/* <Link href="/shipping-policy" underline="hover" color="text.primary">
 									Shipping Policy
 								</Link>
 								<Link href="/privacy-policy" underline="hover" color="text.primary">
 									Privacy Policy
-								</Link>
-								<Link href="/terms-conditions" underline="hover" color="text.primary">
+								</Link> */}
+								<Link
+									href="/slim-free-react-mui-template/termsandcondition"
+									underline="hover"
+									color="text.primary"
+								>
 									Terms & Conditions
 								</Link>
 							</Stack>

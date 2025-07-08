@@ -1,6 +1,5 @@
 import Stack from '@mui/material/Stack';
 
-import WelcomeSection from './welcomesection';
 import StatsSection from './statsSection';
 import GraphsSection from './graphsSection';
 import BitcoinSection from './bitcoinSection';
@@ -13,22 +12,19 @@ import Rudra from './rudra';
 
 function Dashboard1Page() {
 	return (
-		<>
-			<WelcomeSection />
-			<Stack spacing={3}>
-				<GraphsSection />
-				<StatsSection />
-				<section>
-					<BitcoinSection />
-				</section>
-				<Gemstones />
-				<Bracelet />
-				<Rudra />
-				<Reviews />
-				<Blog />
-				<Purity />
-			</Stack>
-		</>
+		<Stack spacing={3}>
+			<GraphsSection />
+			<StatsSection />
+			<section>
+				<BitcoinSection />
+			</section>
+			<Gemstones />
+			<Bracelet />
+			<Rudra />
+			<Reviews />
+			<Blog />
+			<Purity />
+		</Stack>
 	);
 }
 

@@ -204,6 +204,28 @@ class SignInView(APIView):
             return Response({
                 'error': 'Invalid credentials.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+        from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        try:
+            refresh_token = request.data.get("refresh")
+            if not refresh_token:
+                return Response({'error': 'Refresh token is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+
+            return Response({"message": "Logout successful."}, status=status.HTTP_205_RESET_CONTENT)
+        except TokenError:
+            return Response({"error": "Invalid or expired token."}, status=status.HTTP_400_BAD_REQUEST)
+
 import random
 from django.utils import timezone
 from django.core.mail import send_mail
@@ -244,6 +266,7 @@ class ForgotPasswordView(APIView):
 
 
 class ResetPasswordWithOTPView(APIView):
+
     def post(self, request):
         email = request.data.get('email')
         otp = request.data.get('otp')
@@ -274,3 +297,53 @@ class ResetPasswordWithOTPView(APIView):
         otp_record.save()
 
         return Response({'message': 'Password reset successfully.'}, status=status.HTTP_200_OK)
+from django.views import View
+from django.http import JsonResponse
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import CustomUser
+from rest_framework.permissions import IsAuthenticated
+
+ 
+@method_decorator(csrf_exempt, name='dispatch')
+class EditProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        return JsonResponse({
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'birth_date': user.birth_date,
+            'email': user.email,
+            'mobile': user.mobile,
+        })
+
+    def patch(self, request):
+        try:
+            data = json.loads(request.body)
+            user = request.user
+
+            if 'email' in data and data['email'] != user.email:
+                return JsonResponse({'error': 'Email cannot be changed.'}, status=400)
+
+            user.first_name = data.get('first_name', user.first_name).strip()
+            user.last_name = data.get('last_name', user.last_name).strip()
+            user.birth_date = data.get('birth_date', user.birth_date)
+            user.mobile = data.get('mobile', user.mobile).strip()
+
+            user.save()
+
+            return JsonResponse({
+                'message': 'Profile updated successfully.',
+                'user': {
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'birth_date': user.birth_date,
+                    'email': user.email,
+                    'mobile': user.mobile,
+                }
+            }, status=200)
+
+        except Exception as e:
+            return JsonResponse({'error': f'Server error: {str(e)}'}, status=500)

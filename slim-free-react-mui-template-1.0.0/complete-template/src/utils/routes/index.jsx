@@ -10,20 +10,60 @@ import MainLayout from '@/components/layouts/mainLayout';
 import Page404 from '@/pages/errorPages/404';
 
 const Dashboard1Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard1')));
-const Dashboard2Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard2')));
-const Dashboard3Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard3')));
-const Dashboard4Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard4')));
-const Dashboard5Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard5')));
-const Dashboard6Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard6')));
-const Dashboard7Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard7')));
-const Dashboard8Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard8')));
-const Dashboard9Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard9')));
-const Dashboard10Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard10')));
-const Dashboard11Page = withLazyLoadably(lazy(() => import('@/pages/dashboardsPages/dashboard11')));
-const FormsComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/forms')));
+const Terms = withLazyLoadably(lazy(() => import('@/pages/terms')));
+const Likeditem = withLazyLoadably(lazy(() => import('@/pages/likes')));
+const Cart = withLazyLoadably(lazy(() => import('@/pages/cart')));
+const Onemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/one mukhi')));
 const LoadersComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/loaders')));
-const TablesComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/tables')));
-const ModalComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/modal')));
+const Twomukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/two mukhi')));
+const Threemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/three mukhi')));
+const Fourmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/four mukhi')));
+const Fivemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/five mukhi')));
+const Sixmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/six mukhi')));
+const Sevenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/seven mukhi')));
+const Eightmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/eight mukhi')));
+const Ninemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/nine mukhi')));
+const Tenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/ten mukhi')));
+const Elevenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/eleven mukhi')));
+const Twelvemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/twelve mukhi')));
+const Thirteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi13')));
+const Fourteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi14')));
+const Fifteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi15')));
+const Malas = withLazyLoadably(lazy(() => import('@/pages/rudra/malas')));
+const Main = withLazyLoadably(lazy(() => import('@/pages/rudra/main')));
+const Maingem = withLazyLoadably(lazy(() => import('@/pages/gems/maingem')));
+const Dhanyog = withLazyLoadably(lazy(() => import('@/pages/brace/dhanyog')));
+const Amethysr = withLazyLoadably(lazy(() => import('@/pages/brace/amethyst')));
+const Cat = withLazyLoadably(lazy(() => import('@/pages/brace/cat')));
+const Chakra = withLazyLoadably(lazy(() => import('@/pages/brace/chakra')));
+const Citrine = withLazyLoadably(lazy(() => import('@/pages/brace/citrine')));
+const Green = withLazyLoadably(lazy(() => import('@/pages/brace/green')));
+const Pearl = withLazyLoadably(lazy(() => import('@/pages/brace/pearl')));
+const Pyrite = withLazyLoadably(lazy(() => import('@/pages/brace/pyrite')));
+const Rose = withLazyLoadably(lazy(() => import('@/pages/brace/rose')));
+const Sunstone = withLazyLoadably(lazy(() => import('@/pages/brace/sunstone')));
+const Mainbrace = withLazyLoadably(lazy(() => import('@/pages/brace/braceMain')));
+const Bluesapphire = withLazyLoadably(lazy(() => import('@/pages/gems/bluesapphire')));
+const Lehsuniya = withLazyLoadably(lazy(() => import('@/pages/gems/lehsuniya')));
+const Emerald = withLazyLoadably(lazy(() => import('@/pages/gems/emerald')));
+const Amethyst = withLazyLoadably(lazy(() => import('@/pages/gems/amethyst')));
+const Bluezircon = withLazyLoadably(lazy(() => import('@/pages/gems/bluezircon')));
+const Citrinegem = withLazyLoadably(lazy(() => import('@/pages/gems/citrine')));
+const Iolite = withLazyLoadably(lazy(() => import('@/pages/gems/iolite')));
+const Moonstone = withLazyLoadably(lazy(() => import('@/pages/gems/moonstone')));
+const Opal = withLazyLoadably(lazy(() => import('@/pages/gems/opal')));
+const Pearlgem = withLazyLoadably(lazy(() => import('@/pages/gems/pearl')));
+const Pitambari = withLazyLoadably(lazy(() => import('@/pages/gems/pitambari')));
+const Redcoral = withLazyLoadably(lazy(() => import('@/pages/gems/redcoral')));
+const Ruby = withLazyLoadably(lazy(() => import('@/pages/gems/ruby')));
+const Whitecoral = withLazyLoadably(lazy(() => import('@/pages/gems/whitecoral')));
+const Whitesapphire = withLazyLoadably(lazy(() => import('@/pages/gems/whitesapphire')));
+const Whitezircon = withLazyLoadably(lazy(() => import('@/pages/gems/whitezircon')));
+const Yellowsapphire = withLazyLoadably(lazy(() => import('@/pages/gems/yellowsapphire')));
+const Amber = withLazyLoadably(lazy(() => import('@/pages/gems/amber')));
+const Redgarnet = withLazyLoadably(lazy(() => import('@/pages/gems/redgarnet')));
+const Turquoise = withLazyLoadably(lazy(() => import('@/pages/gems/Turquoise (Firoza)')));
+const Hessonite = withLazyLoadably(lazy(() => import('@/pages/gems/hessonite')));
 const SnackbarComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/snackbar')));
 const CarouselComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/carousel')));
 const NavigationComponentPage = withLazyLoadably(lazy(() => import('@/pages/componentsPages/navigation')));
@@ -33,7 +73,7 @@ const PageHeaderComponentPage = withLazyLoadably(lazy(() => import('@/pages/uiCo
 const LoginPage = withLazyLoadably(lazy(() => import('@/pages/loginPages/login')));
 const LoginSimplePage = withLazyLoadably(lazy(() => import('@/pages/loginPages/loginSimple')));
 const ResetPass = withLazyLoadably(lazy(() => import('@/pages/loginPages/ResetPAss')));
-const SignupSplitPage = withLazyLoadably(lazy(() => import('@/pages/signupPages/signupSplit')));
+const Returnpolicy = withLazyLoadably(lazy(() => import('@/pages/returnpolicy')));
 const SignupSimplePage = withLazyLoadably(lazy(() => import('@/pages/signupPages/signupSimple')));
 const SignupPage = withLazyLoadably(lazy(() => import('@/pages/signupPages/signup')));
 const Otpverification = withLazyLoadably(lazy(() => import('../../pages/otpverification')));
@@ -64,7 +104,7 @@ function Router() {
 							<Route path="resetpass" element={<ResetPass />} />
 							<Route path="signup" element={<SignupPage />} />
 							<Route path="signup/simple" element={<SignupSimplePage />} />
-							<Route path="return-policy" element={<SignupSplitPage />} />
+							<Route path="profile" element={<EditProfilePage />} />
 							<Route path="otpverification" element={<Otpverification />} />
 						</Route>
 					</Route>
@@ -76,29 +116,70 @@ function Router() {
 
 						<Route path="dashboards/">
 							<Route path="dashboard1" element={<Dashboard1Page />} />
-							<Route path="dashboard2" element={<Dashboard2Page />} />
-							<Route path="dashboard3" element={<Dashboard3Page />} />
-							<Route path="dashboard4" element={<Dashboard4Page />} />
-							<Route path="dashboard5" element={<Dashboard5Page />} />
-							<Route path="dashboard6" element={<Dashboard6Page />} />
-							<Route path="dashboard7" element={<Dashboard7Page />} />
-							<Route path="dashboard8" element={<Dashboard8Page />} />
-							<Route path="dashboard9" element={<Dashboard9Page />} />
-							<Route path="dashboard10" element={<Dashboard10Page />} />
-							<Route path="dashboard11" element={<Dashboard11Page />} />
 						</Route>
 
-						<Route path="components/">
-							<Route path="forms" element={<FormsComponentPage />} />
+						<Route path="/">
+							<Route path="natural-1-mukhi-rudraksha-savar-(nepali)" element={<Onemukhi />} />
 							<Route path="loaders" element={<LoadersComponentPage />} />
-							<Route path="tables" element={<TablesComponentPage />} />
-							<Route path="modal" element={<ModalComponentPage />} />
+							<Route path="natural-2-mukhi-rudraksha-savar-(nepali)" element={<Twomukhi />} />
+							<Route path="natural-3-mukhi-rudraksha-savar-(nepali)" element={<Threemukhi />} />
+							<Route path="natural-4-mukhi-rudraksha-savar-(nepali)" element={<Fourmukhi />} />
+							<Route path="natural-5-mukhi-rudraksha-savar-(nepali)" element={<Fivemukhi />} />
+							<Route path="natural-6-mukhi-rudraksha-savar-(nepali)" element={<Sixmukhi />} />
+							<Route path="natural-7-mukhi-rudraksha-savar-(nepali)" element={<Sevenmukhi />} />
+							<Route path="natural-8-mukhi-rudraksha-savar-(nepali)" element={<Eightmukhi />} />
+							<Route path="natural-9-mukhi-rudraksha-savar-(nepali)" element={<Ninemukhi />} />
+							<Route path="natural-10-mukhi-rudraksha-savar-(nepali)" element={<Tenmukhi />} />
+							<Route path="natural-11-mukhi-rudraksha-savar-(nepali)" element={<Elevenmukhi />} />
+							<Route path="natural-12-mukhi-rudraksha-savar-(nepali)" element={<Twelvemukhi />} />
+							<Route path="natural-13-mukhi-rudraksha-savar-(nepali)" element={<Thirteenmukhi />} />
+							<Route path="natural-14-mukhi-rudraksha-savar-(nepali)" element={<Fourteenmukhi />} />
+							<Route path="natural-15-mukhi-rudraksha-savar-(nepali)" element={<Fifteenmukhi />} />
+							<Route path="1-to-14-mukhi-rudraksha-mala-(siddha-mala)" element={<Malas />} />
+							<Route path="main" element={<Main />} />
+							<Route path="mainbrace" element={<Mainbrace />} />
+							<Route path="refund-policy" element={<Returnpolicy />} />
+							<Route path="maingem" element={<Maingem />} />
+							<Route path="amethyst-bracelet" element={<Amethysr />} />
+							<Route path="cat's-eye-bracelet" element={<Cat />} />
+							<Route path="7-chakra-bracelet" element={<Chakra />} />
+							<Route path="citrine-bracelet" element={<Citrine />} />
+							<Route path="green-aventurine-bracelet" element={<Green />} />
+							<Route path="mother-of-pearl-bracelet" element={<Pearl />} />
+							<Route path="pyrite-bracelet" element={<Pyrite />} />
+							<Route path="rose-quartz-bracelet" element={<Rose />} />
+							<Route path="sunstone-bracelet" element={<Sunstone />} />
+							<Route path="dhan-yog-bracelet" element={<Dhanyog />} />
+							<Route path="blue-sapphire-(neelam)" element={<Bluesapphire />} />
+							<Route path="cat's-eye-(lehsunia)" element={<Lehsuniya />} />
+							<Route path="emerald-(panna)" element={<Emerald />} />
+							<Route path="hessonite-(gomed)" element={<Hessonite />} />
+							<Route path="amethyst-(katela)" element={<Amethyst />} />
+							<Route path="blue-zircon" element={<Bluezircon />} />
+							<Route path="iolite-(kaka-nili)" element={<Iolite />} />
+							<Route path="citrine-(sunela)" element={<Citrinegem />} />
+							<Route path="moonstone" element={<Moonstone />} />
+							<Route path="opal" element={<Opal />} />
+							<Route path="pearl" element={<Pearlgem />} />
+							<Route path="pitambari-/-neelambari" element={<Pitambari />} />
+							<Route path="red-coral-(moonga)" element={<Redcoral />} />
+							<Route path="ruby-(manik)" element={<Ruby />} />
+							<Route path="white-coral-(moonga)" element={<Whitecoral />} />
+							<Route path="white-sapphire" element={<Whitesapphire />} />
+							<Route path="white-zircon" element={<Whitezircon />} />
+							<Route path="yellow-sapphire-(pukhraj)" element={<Yellowsapphire />} />
+							<Route path="amber" element={<Amber />} />
+							<Route path="likes" element={<Likeditem />} />
+							<Route path="cart" element={<Cart />} />
+							<Route path="red-garnet" element={<Redgarnet />} />
+							<Route path="turquoise-(firoza)" element={<Turquoise />} />
 							<Route path="snackbar" element={<SnackbarComponentPage />} />
 							<Route path="carousel" element={<CarouselComponentPage />} />
 							<Route path="navigation" element={<NavigationComponentPage />} />
 							<Route path="card" element={<CardComponentPage />} />
 							<Route path="cardHeader" element={<CardHeaderComponentPage />} />
 							<Route path="pageHeader" element={<PageHeaderComponentPage />} />
+							<Route path="termsandcondition" element={<Terms />} />
 						</Route>
 
 						<Route path="theme/">
@@ -108,7 +189,7 @@ function Router() {
 						</Route>
 
 						<Route path="pages/">
-							<Route path="settings" element={<EditProfilePage />} />
+							<Route path="profile/edit" element={<EditProfilePage />} />
 							<Route path="notifications" element={<NotificationsPage />} />
 							<Route path="pricing/">
 								<Route path="pricing1" element={<Pricing1Page />} />
@@ -124,6 +205,7 @@ function Router() {
 						</Route>
 					</Route>
 					<Route path="/" element={<MainLayout container={false} pb={false} />}>
+						<Route path="profile" element={<EditProfilePage />} />
 						<Route path="pages/">
 							<Route path="wip" element={<WIPPage />} />
 						</Route>

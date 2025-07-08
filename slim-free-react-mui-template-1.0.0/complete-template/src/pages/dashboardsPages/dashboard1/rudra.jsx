@@ -9,8 +9,8 @@ import CardActionArea from '@mui/material/CardActionArea';
 import bitcoin1 from '@/assets/images/rudra/sanskrit-mantra-parchment-tulsi-leaves-rudraksha-beads-close-up-handwritten-sanskrit-mantra-parchm.webp';
 import bitcoin2 from '@/assets/images/rudra/bunch-indian-fruit-table_347118-6.avif';
 import bitcoin3 from '@/assets/images/rudra/tibetan-religious-objects-meditation-alternative-medicine_116441-828.jpg';
-import mehndiLeft from '@/assets/images/left.png'; // custom mehndi design
-import mehndiRight from '@/assets/images/left1.png'; // custom mehndi design
+import mehndiLeft from '@/assets/images/common/left.png'; // custom mehndi design
+import mehndiRight from '@/assets/images/common/left1.png'; // custom mehndi design
 
 import { Link as RouterLink } from 'react-router-dom';
 
@@ -19,19 +19,19 @@ const BITCOIN_CARDS = [
 		img: bitcoin1,
 		title: '1 -15 Mukhi Rudraksha',
 		buttonText: 'Shop Now',
-		link: '/secure',
+		link: '/main',
 	},
 	{
 		img: bitcoin2,
 		title: 'Special Rudraksha',
 		buttonText: 'Shop Now',
-		link: '/exchange',
+		link: '/main',
 	},
 	{
 		img: bitcoin3,
 		title: 'Rudraksha Malas',
 		buttonText: 'Shop Now',
-		link: '/fast-transactions',
+		link: '/1-to-14-mukhi-rudraksha-mala-(siddha-mala)',
 	},
 ];
 

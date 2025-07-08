@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Card, CardContent, CardMedia, Grid } from '@mui/material';
-import mehndiLeft from '@/assets/images/left.png';
-import mehndiRight from '@/assets/images/left1.png';
+import mehndiLeft from '@/assets/images/common/left.png';
+import mehndiRight from '@/assets/images/common/left1.png';
 
 // Sample blog post data
 const blogPosts = [

@@ -3,12 +3,12 @@ import Container from '@mui/material/Container';
 import { Link as RouterLink } from 'react-router-dom';
 import { Box, Stack, Link } from '@mui/material';
 // assets
-import logo from '@/assets/images/logo/png/ratan.png';
+import logo from '@/assets/images/logo/favicon.svg';
 
 import LoggedUser from './loggedUser';
 import SearchBar from './searchBar';
 
-function MainHeader() {
+function MainHeader({ onSearch }) {
 	return (
 		<Box bgcolor="background.paper" component="header" py={1.5} zIndex={1}>
 			<Stack
@@ -34,8 +34,8 @@ function MainHeader() {
 						<Box
 							component="img"
 							width={{
-								xs: 60,
-								sm: 39,
+								xs: 65,
+								sm: 50,
 							}}
 							src={logo}
 							alt="logo"
@@ -45,17 +45,18 @@ function MainHeader() {
 							component="sub"
 							variant="caption"
 							fontSize={{
-								xs: '20px',
-								sm: '24px',
-								md: '28px',
+								xs: '25px',
+								sm: '25px',
+								md: '25px',
 							}}
+							sx={{ mt: 1.5 }}
 							color="text.primary"
 						>
 							Ratanjyoti
 						</Typography>
 					</Link>
 				</Stack>
-				<SearchBar />
+				<SearchBar onSearch={onSearch} />
 				<LoggedUser />
 			</Stack>
 		</Box>

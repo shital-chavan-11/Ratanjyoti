@@ -1,143 +1,165 @@
-import { Link as RouterLink, useSearchParams } from 'react-router-dom';
-import { v4 as uuid } from 'uuid';
-import calcHeaderHeight from '@helpers/layoutHeight';
+import React, { useEffect, useState } from 'react';
+import { TextField, Button, Box, Snackbar, Alert, Typography, CircularProgress, Stack, Paper } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-// MUI
-import Typography from '@mui/material/Typography';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import MenuItem from '@mui/material/MenuItem';
-import MenuList from '@mui/material/MenuList';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
+function Profile() {
+	const [form, setForm] = useState({
+		first_name: '',
+		last_name: '',
+		birth_date: '',
+		email: '',
+		mobile: '',
+	});
+	const [originalForm, setOriginalForm] = useState(null);
+	const [loading, setLoading] = useState(true);
+	const [isEditing, setIsEditing] = useState(false);
+	const navigate = useNavigate();
+	const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-import Person2OutlinedIcon from '@mui/icons-material/Person2Outlined';
-import AccountBoxOutlinedIcon from '@mui/icons-material/AccountBoxOutlined';
-import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
-import HandshakeOutlinedIcon from '@mui/icons-material/HandshakeOutlined';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+	useEffect(() => {
+		const token = localStorage.getItem('accessToken');
 
-import PageHeader from '@/components/pageHeader';
+		// Redirect to login if no token found
+		if (!token) {
+			navigate('/pages/login/simple');
+			return;
+		}
 
-import Account from './account';
-import Profile from './profile';
-import Security from './security';
-import Billing from './billing';
+		axios
+			.get('http://localhost:8000/auth/user/edit/', {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				setForm(res.data);
+				setOriginalForm(res.data);
+			})
+			.catch((err) => {
+				setSnackbar({ open: true, message: 'Failed to load profile', severity: 'error' });
+				if (err.response?.status === 401) {
+					localStorage.removeItem('accessToken');
+					localStorage.removeItem('refreshToken');
+					navigate('/pages/login/simple');
+				}
+			})
+			.finally(() => setLoading(false));
+	}, [navigate]);
 
-const menuOptions = [
-	{
-		id: uuid(),
-		name: 'account',
-		Icon: Person2OutlinedIcon,
-		text: 'Account',
-		renderSection: <Account />,
-	},
-	{
-		id: uuid(),
-		name: 'profile',
-		Icon: AccountBoxOutlinedIcon,
-		text: 'Profile',
-		renderSection: <Profile />,
-	},
-	{
-		id: uuid(),
-		name: 'billing',
-		Icon: CreditCardIcon,
-		text: 'Billing',
-		renderSection: <Billing />,
-	},
-	{
-		id: uuid(),
-		name: 'security',
-		Icon: VpnKeyOutlinedIcon,
-		text: 'Security',
-		renderSection: <Security />,
-	},
-];
-
-function EditProfile() {
-	const [searchParams, setSearchParams] = useSearchParams();
-	const activeSection = searchParams.get('section') || menuOptions[0].name;
-
-	const changeSectionHandler = (sectionName) => {
-		window.scrollTo({
-			top: 0,
-			left: 0,
-			behavior: 'smooth',
-		});
-		setSearchParams({ section: sectionName });
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setForm((prev) => ({ ...prev, [name]: value }));
 	};
 
+	const handleSubmit = () => {
+		const token = localStorage.getItem('accessToken');
+
+		axios
+			.patch('http://localhost:8000/auth/user/edit/', form, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
+			.then((res) => {
+				setForm(res.data.user);
+				setOriginalForm(res.data.user);
+				setIsEditing(false);
+				setSnackbar({ open: true, message: res.data.message, severity: 'success' });
+			})
+			.catch((err) => {
+				const msg = err.response?.data?.error || 'Update failed';
+				setSnackbar({ open: true, message: msg, severity: 'error' });
+			});
+	};
+
+	const handleCancel = () => {
+		setForm(originalForm);
+		setIsEditing(false);
+	};
+
+	if (loading) return <CircularProgress sx={{ mt: 10, mx: 'auto', display: 'block' }} />;
+
 	return (
-		<>
-			<PageHeader title="Account Settings Page">
-				<Breadcrumbs
-					aria-label="breadcrumb"
-					sx={{
-						textTransform: 'uppercase',
-					}}
-				>
-					<Link underline="hover" component={RouterLink} to="/pages/profile">
-						Profile
-					</Link>
-					<Typography color="text.tertiary">Settings</Typography>
-				</Breadcrumbs>
-			</PageHeader>
-			<Grid container rowSpacing={2} columnSpacing={4}>
-				<Grid item xs={12} sm={4} md={3}>
-					<Card
-						sx={{
-							position: 'sticky',
-							top: `${calcHeaderHeight('nav', false) + 30}px`,
-						}}
-						component="aside"
-					>
-						<Typography variant="subtitle1">Elizabeth Lumaad Olsen</Typography>
-						<Divider sx={{ borderColor: 'primary.light', my: 1 }} />
-						<MenuList
-							sx={{
-								'& .MuiMenuItem-root': {
-									borderRadius: 2,
-								},
-							}}
-						>
-							{menuOptions.map(({ id, name, Icon, text }) => (
-								<MenuListItem
-									key={id}
-									text={text}
-									Icon={Icon}
-									onClick={() => changeSectionHandler(name)}
-									selected={activeSection === name}
-								/>
-							))}
-							<MenuItem>
-								<ListItemIcon>
-									<HandshakeOutlinedIcon fontSize="medium" />
-								</ListItemIcon>
-								Terms and conditions
-							</MenuItem>
-						</MenuList>
-					</Card>
-				</Grid>
-				<Grid item xs={12} sm={8} md={9}>
-					{menuOptions.find((option) => option.name === activeSection)?.renderSection}
-				</Grid>
-			</Grid>
-		</>
+		<Box sx={{ maxWidth: 600, mx: 'auto', my: 6 }}>
+			<Paper elevation={3} sx={{ p: 4 }}>
+				<Typography variant="h5" gutterBottom align="center">
+					Profile
+				</Typography>
+				<TextField
+					fullWidth
+					label="First Name"
+					name="first_name"
+					value={form.first_name}
+					onChange={handleChange}
+					margin="normal"
+					disabled={!isEditing}
+				/>
+				<TextField
+					fullWidth
+					label="Last Name"
+					name="last_name"
+					value={form.last_name}
+					onChange={handleChange}
+					margin="normal"
+					disabled={!isEditing}
+				/>
+				<TextField
+					fullWidth
+					label="Birth Date"
+					name="birth_date"
+					type="date"
+					value={form.birth_date}
+					onChange={handleChange}
+					margin="normal"
+					InputLabelProps={{ shrink: true }}
+					disabled={!isEditing}
+				/>
+				<TextField
+					fullWidth
+					label="Email"
+					name="email"
+					value={form.email}
+					margin="normal"
+					InputProps={{ readOnly: true }}
+				/>
+				<TextField
+					fullWidth
+					label="Mobile"
+					name="mobile"
+					value={form.mobile}
+					onChange={handleChange}
+					margin="normal"
+					disabled={!isEditing}
+				/>
+
+				<Stack direction="row" spacing={2} sx={{ mt: 3 }} justifyContent="center">
+					{isEditing ? (
+						<>
+							<Button variant="contained" color="primary" onClick={handleSubmit}>
+								Save Changes
+							</Button>
+							<Button variant="outlined" color="secondary" onClick={handleCancel}>
+								Cancel
+							</Button>
+						</>
+					) : (
+						<Button variant="contained" onClick={() => setIsEditing(true)}>
+							Edit Profile
+						</Button>
+					)}
+				</Stack>
+			</Paper>
+
+			<Snackbar
+				open={snackbar.open}
+				autoHideDuration={4000}
+				onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
+			>
+				<Alert severity={snackbar.severity}>{snackbar.message}</Alert>
+			</Snackbar>
+		</Box>
 	);
 }
 
-function MenuListItem({ Icon, text, ...props }) {
-	return (
-		<MenuItem {...props}>
-			<ListItemIcon>
-				<Icon fontSize="medium" />
-			</ListItemIcon>
-			{text}
-		</MenuItem>
-	);
-}
-
-export default EditProfile;
+export default Profile;

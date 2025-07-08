@@ -69,7 +69,7 @@ function NavMenu({ minWidth = '100%', menuChildren = [], Icon, title }) {
 									<Box
 										sx={{
 											display: 'grid',
-											gridTemplateColumns: 'repeat(5, 1fr)',
+											gridTemplateColumns: 'repeat(8, 1fr)',
 											gap: 2,
 											px: 1,
 											py: 1,
