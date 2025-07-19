@@ -274,19 +274,18 @@ class GetGemstoneVariantView(APIView):
         except GemstoneVariant.DoesNotExist:
             return JsonResponse({'error': 'Gemstone variant not found'}, status=404)
 
-        # Get the image URL, or None if not set
+        # Get the image URL if available
         origin_image_url = request.build_absolute_uri(gemstone.origin_image.url) if gemstone.origin_image else None
 
         return JsonResponse({
+            'gemstone_id': gemstone.id,
+            'variant_id': variant.id,
             'name': gemstone.name,
             'origin': gemstone.origin,
             'carat': str(variant.carat),
             'price': str(variant.price),
             'origin_image': origin_image_url
         })
-
-
-
 
 
 class CategoryCreateView(APIView):

@@ -97,10 +97,22 @@ function CartButton() {
 		const token = getAccessToken();
 		if (!token) {
 			setIsAuthenticated(false);
-			return;
+			return undefined; // ✅ make it consistent
 		}
+
 		setIsAuthenticated(true);
-		fetchCartData(); // ✅ fetch cart on mount
+		fetchCartData();
+
+		// ✅ Listen for global cart update events
+		const handleCartUpdated = () => {
+			fetchCartData();
+		};
+		window.addEventListener('cart-updated', handleCartUpdated);
+
+		// ✅ Cleanup
+		return () => {
+			window.removeEventListener('cart-updated', handleCartUpdated);
+		};
 	}, []);
 
 	return (
@@ -171,8 +183,8 @@ function CartButton() {
 				<IconButton onClick={handleClick} size="small">
 					<Badge
 						color="secondary"
-						badgeContent={isAuthenticated ? cartItems.length : 0}
-						invisible={!isAuthenticated || cartItems.length === 0}
+						badgeContent={isAuthenticated ? cartCount : 0}
+						invisible={!isAuthenticated || cartCount === 0}
 					>
 						<ShoppingCartIcon color="primary" />
 					</Badge>

@@ -41,11 +41,25 @@ function RudrakshaDetails() {
 	const handleLikeClick = async (productId) => {
 		try {
 			const token = localStorage.getItem('accessToken');
+			if (!token) {
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			const decoded = jwtDecode(token);
+			const isTokenExpired = decoded.exp < Date.now() / 1000;
+			if (isTokenExpired) {
+				localStorage.removeItem('accessToken');
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			// Make API call to toggle like
 			const response = await axios.post(
 				'http://127.0.0.1:8000/order/toggle-like/',
 				{
 					id: productId,
-					model: 'rudraksha', // If dynamic, pass it as a parameter
+					model: 'rudraksha', // Make this dynamic if needed
 				},
 				{
 					headers: {
@@ -55,19 +69,21 @@ function RudrakshaDetails() {
 				},
 			);
 
+			// Extract and update liked items
 			const updatedLikedIds = response.data?.liked_items;
 			if (Array.isArray(updatedLikedIds)) {
-				// Only update rudraksha likes and preserve others
 				setLikedItems((prev) => {
-					// Filter out old rudraksha likes
+					// Remove previous rudraksha likes, keep other model likes
 					const otherModelLikes = rudrakshaList.length
 						? prev.filter((id) => !rudrakshaList.some((r) => r.id === id))
 						: prev;
+
 					return [...otherModelLikes, ...updatedLikedIds];
 				});
 			} else {
 				console.error('liked_items is not an array:', updatedLikedIds);
 			}
+			window.dispatchEvent(new Event('wishlistUpdated'));
 		} catch (error) {
 			console.error('Error toggling like:', error);
 		}
@@ -138,6 +154,25 @@ function RudrakshaDetails() {
 			</Container>
 		);
 	}
+	const iconButtonStyle = {
+		position: 'absolute',
+		zIndex: 10,
+		backgroundColor: '#ffffff',
+		color: 'black',
+		padding: '4px',
+		width: '40px',
+		height: '40px',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: '50%',
+		boxShadow: 2,
+		border: '2px solid black',
+		cursor: 'pointer',
+		'&:hover': {
+			backgroundColor: '#f0f0f0',
+		},
+	};
 	const handleAddToCart = async () => {
 		const token = localStorage.getItem('accessToken');
 		if (!token) {
@@ -168,7 +203,8 @@ function RudrakshaDetails() {
 
 			console.log('Added to cart:', response.data.message);
 			navigate('/cart');
-			setSnackbar({ open: true, message: 'Item added to cart!' }); // Replace with toast/snackbar if preferred
+			setSnackbar({ open: true, message: 'Item added to cart!' });
+			window.dispatchEvent(new Event('cart-updated')); // Replace with toast/snackbar if preferred
 		} catch (error) {
 			console.error('Add to cart error:', error);
 			setSnackbar({ open: true, message: 'Failed to add to cart. Please try again.' });
@@ -301,58 +337,77 @@ function RudrakshaDetails() {
 			</Card>
 
 			{/* Dialog with enlarged image and navigation */}
-			<Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md">
+
+			<Dialog
+				open={openDialog}
+				onClose={handleCloseDialog}
+				PaperProps={{
+					sx: {
+						width: 1000,
+						height: 1000,
+						maxWidth: 'none',
+						margin: 'auto',
+						borderRadius: 3,
+						position: 'relative',
+						overflow: 'hidden',
+					},
+				}}
+			>
 				<DialogContent
 					sx={{
-						position: 'relative',
-						p: 0,
-						background: '#000',
-						textAlign: 'center',
-						height: '90vh', // keep container fixed height
-						width: '800px', // fixed width
+						background: '#ffffff',
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
+						padding: 4,
+						width: '100%',
+						height: '100%',
+						overflow: 'hidden',
 					}}
 				>
+					{/* Close Button */}
 					<IconButton
 						onClick={handleCloseDialog}
-						sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
+						sx={{
+							...iconButtonStyle,
+							top: 16,
+							right: 16,
+						}}
 					>
 						<CloseIcon />
 					</IconButton>
 
+					{/* Prev Button */}
 					<IconButton
 						onClick={handlePrevImage}
 						sx={{
-							position: 'absolute',
-							left: 8,
+							...iconButtonStyle,
+							left: 20,
 							top: '50%',
 							transform: 'translateY(-50%)',
-							color: 'white',
 						}}
 					>
 						<ArrowBackIos />
 					</IconButton>
-
+					{/* Image */}
 					<img
 						src={selectedImage}
 						alt="Preview"
 						style={{
-							maxWidth: '100%',
-							maxHeight: '100%',
+							maxWidth: '90vw',
+							maxHeight: '90vh',
 							objectFit: 'contain',
 						}}
 					/>
 
+					{/* Next Button */}
 					<IconButton
 						onClick={handleNextImage}
 						sx={{
-							position: 'absolute',
-							right: 8,
+							...iconButtonStyle,
+							right: 20,
 							top: '50%',
 							transform: 'translateY(-50%)',
-							color: 'white',
 						}}
 					>
 						<ArrowForwardIos />

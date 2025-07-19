@@ -56,7 +56,7 @@ function MainHeader({ onSearch }) {
 						</Typography>
 					</Link>
 				</Stack>
-				<SearchBar onSearch={onSearch} />
+				<SearchBar onSearch={onSearch} sx={{ mt: 100, ml: 10 }} />
 				<LoggedUser />
 			</Stack>
 		</Box>

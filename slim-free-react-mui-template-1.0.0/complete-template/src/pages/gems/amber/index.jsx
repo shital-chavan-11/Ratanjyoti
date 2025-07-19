@@ -14,11 +14,14 @@ import {
 	Snackbar,
 	Alert,
 } from '@mui/material';
+import { jwtDecode } from 'jwt-decode';
+import { useNavigate, useParams } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 
 function GemstoneForm() {
 	const [name, setName] = useState('');
 	const [origin, setOrigin] = useState('None');
+	const navigate = useNavigate();
 	const [carat, setCarat] = useState('');
 	const [gemstoneData, setGemstoneData] = useState(null);
 	const [error, setError] = useState('');
@@ -49,8 +52,54 @@ function GemstoneForm() {
 		}
 	};
 
-	const handleAddToCart = () => {
-		setSnackbar({ open: true, message: 'Item added to cart!', severity: 'success' });
+	const handleAddToCart = async () => {
+		const token = localStorage.getItem('accessToken');
+		if (!token) {
+			navigate('/pages/login/simple');
+			return;
+		}
+
+		try {
+			const decoded = jwtDecode(token);
+			if (decoded.exp < Date.now() / 1000) {
+				localStorage.removeItem('accessToken');
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			// Ensure gemstoneData is valid and contains variant_id
+			if (!gemstoneData?.gemstone_id || !gemstoneData?.variant_id) {
+				setSnackbar({ open: true, message: 'Gemstone or variant not found.', severity: 'error' });
+				return;
+			}
+
+			const response = await axios.post(
+				'http://127.0.0.1:8000/order/add/',
+				{
+					product_type: 'Gemstone',
+					product_id: gemstoneData.gemstone_id,
+
+					variant_id: gemstoneData.gemstoneVariant_id,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+
+			console.log('Added to cart:', response.data.message);
+			navigate('/cart');
+			setSnackbar({ open: true, message: 'Item added to cart!', severity: 'success' });
+			window.dispatchEvent(new Event('cart-updated'));
+		} catch (error) {
+			console.error('Add to cart error:', error);
+			setSnackbar({
+				open: true,
+				message: error.response?.data?.error || 'Failed to add to cart. Please try again.',
+				severity: 'error',
+			});
+		}
 	};
 
 	const handleBuyNow = () => {

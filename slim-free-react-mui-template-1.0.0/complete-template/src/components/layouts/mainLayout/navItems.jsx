@@ -253,7 +253,7 @@ const NAV_LINKS_CONFIG = [
 				href: '/natural-15-mukhi-rudraksha-savar-(nepali)',
 				image: mukhi15,
 			},
-			{ title: 'Rudraksha Malas', href: '1-to-14-mukhi-rudraksha-mala-(siddha-mala)', image: mala },
+
 			// { title: '17 Mukhi Rudraksha (Nepali)', href: '/3b', image: mukhi17 },
 			// { title: '18 Mukhi Rudraksha (Nepali)', href: '/3c', image: mukhi18 },
 			//   { title: 'Level 4a', href: '/4a' },
@@ -316,6 +316,107 @@ const NAV_LINKS_CONFIG = [
 				href: '/citrine-bracelet',
 				image: brace10,
 			},
+			// {
+			// 	title: 'Rudraksha Bracelet',
+			// 	href: '/pages/error/403',
+			// 	image: brace11,
+			// },
+			// {
+			// 	title: 'Rudraksha Kids Bracelet',
+			// 	href: '/pages/error/404',
+			// 	image: brace12,
+			// },
+			// {
+			// 	title: 'All Crystal Bracelet',
+			// 	href: '/pages/error/500',
+			// 	image: brace13,
+			// },
+			// {
+			// 	title: '503 Service Unavailable',
+			// 	href: '/pages/error/503',
+			// },
+			// {
+			// 	title: '505 Forbidden',
+			// 	href: '/pages/error/505',
+			// },
+			// {
+			// 	title: 'Pricing 1',
+			// 	href: '/pages/pricing/pricing1',
+			// },
+			// {
+			// 	title: 'Pricing 2',
+			// 	href: '/pages/pricing/pricing2',
+			// },
+			// {
+			// 	title: 'Landing01',
+			// 	href: '/pages/landing/landing1',
+			// },
+			// {
+			// 	title: 'Landing02',
+			// 	href: '/pages/landing/landing2',
+			// },
+			// {
+			// 	title: 'Landing03',
+			// 	href: '/pages/landing/landing3',
+			// },
+			// {
+			// 	title: 'Landing04',
+			// 	href: '/pages/landing/landing4',
+			// },
+		],
+	},
+
+	{
+		id: uuid(),
+		type: 'group',
+		title: 'Malas',
+		menuChildren: [
+			{ title: 'Rudraksha Malas', href: '1-to-14-mukhi-rudraksha-mala-(siddha-mala)', image: mala },
+			// {
+			// 	title: 'Amethyst Bracelet',
+			// 	href: '/amethyst-bracelet',
+			// 	image: brace2,
+			// },
+			// {
+			// 	title: 'Green Aventurine Bracelet',
+			// 	href: '/green-aventurine-bracelet',
+			// 	image: brace3,
+			// },
+			// {
+			// 	title: "Cat's Eye Bracelet",
+			// 	href: "/cat's-eye-bracelet",
+			// 	image: brace4,
+			// },
+			// {
+			// 	title: 'Pyrite Bracelet',
+			// 	href: '/pyrite-bracelet',
+			// 	image: brace5,
+			// },
+			// {
+			// 	title: 'Rose Quartz Bracelet',
+			// 	href: '/rose-quartz-bracelet',
+			// 	image: brace6,
+			// },
+			// {
+			// 	title: 'Pearl Bracelet',
+			// 	href: '/mother-of-pearl-bracelet',
+			// 	image: brace7,
+			// },
+			// {
+			// 	title: 'Sunstone Bracelet',
+			// 	href: '/sunstone-bracelet',
+			// 	image: brace8,
+			// },
+			// {
+			// 	title: '7 Chakra Bracelet',
+			// 	href: '/7-chakra-bracelet',
+			// 	image: brace9,
+			// },
+			// {
+			// 	title: 'Citrine Bracelet',
+			// 	href: '/citrine-bracelet',
+			// 	image: brace10,
+			// },
 			// {
 			// 	title: 'Rudraksha Bracelet',
 			// 	href: '/pages/error/403',

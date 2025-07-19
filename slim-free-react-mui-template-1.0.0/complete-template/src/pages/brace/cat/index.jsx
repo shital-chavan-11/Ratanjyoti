@@ -86,16 +86,48 @@ function BraceletDetails() {
 
 		fetchLikes();
 	}, []);
+	const iconButtonStyle = {
+		position: 'absolute',
+		zIndex: 10,
+		backgroundColor: '#ffffff',
+		color: 'black',
+		padding: '4px',
+		width: '40px',
+		height: '40px',
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		borderRadius: '50%',
+		boxShadow: 2,
+		border: '2px solid black',
+		cursor: 'pointer',
+		'&:hover': {
+			backgroundColor: '#f0f0f0',
+		},
+	};
 
 	// LIKE FUNCTION
 	const handleLikeClick = async (productId) => {
 		try {
 			const token = localStorage.getItem('accessToken');
+
+			if (!token) {
+				navigate('/pages/login/simple'); // 👈 Redirect if not logged in
+				return;
+			}
+
+			const decoded = jwtDecode(token);
+			if (decoded.exp < Date.now() / 1000) {
+				localStorage.removeItem('accessToken');
+				navigate('/pages/login/simple'); // 👈 Redirect if token expired
+				return;
+			}
+
 			await axios.post(
 				'http://127.0.0.1:8000/order/toggle-like/',
 				{
 					id: productId,
-					model: 'bracelet', // ✅ Correct model here
+					model: 'bracelet',
 				},
 				{
 					headers: {
@@ -105,10 +137,11 @@ function BraceletDetails() {
 				},
 			);
 
-			// Toggle locally for immediate UI feedback
+			// Toggle locally for UI feedback
 			setLikedItems((prev) =>
 				prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
 			);
+			window.dispatchEvent(new Event('wishlistUpdated'));
 		} catch (error) {
 			console.error('Error toggling like:', error);
 		}
@@ -137,6 +170,10 @@ function BraceletDetails() {
 
 			console.log('Added to cart:', res.data.message);
 			setSnackbar({ open: true, message: 'Bracelet added to cart!' });
+
+			// ✅ Move this after snackbar
+			window.dispatchEvent(new Event('cart-updated'));
+
 			return true;
 		} catch (error) {
 			console.error('Cart error:', error);
@@ -144,6 +181,22 @@ function BraceletDetails() {
 			return null;
 		}
 	};
+	if (loading) {
+		return (
+			<Container sx={{ textAlign: 'center', marginTop: 5 }}>
+				<CircularProgress />
+				<Typography mt={2}>Loading bracelet...</Typography>
+			</Container>
+		);
+	}
+
+	if (error || !rudrakshaData) {
+		return (
+			<Container sx={{ textAlign: 'center', marginTop: 5 }}>
+				<Alert severity="error">{error || 'Bracelet data unavailable'}</Alert>
+			</Container>
+		);
+	}
 
 	if (loading) {
 		return (
@@ -172,8 +225,17 @@ function BraceletDetails() {
 		setOpenDialog(true);
 	};
 	const handleCloseDialog = () => setOpenDialog(false);
-	const handleNextImage = () => setImageIndex((prev) => (prev + 1) % images.length);
-	const handlePrevImage = () => setImageIndex((prev) => (prev - 1 + images.length) % images.length);
+	const handleNextImage = () => {
+		const nextIndex = (imageIndex + 1) % images.length;
+		setImageIndex(nextIndex);
+		setSelectedImage(images[nextIndex]);
+	};
+
+	const handlePrevImage = () => {
+		const prevIndex = (imageIndex - 1 + images.length) % images.length;
+		setImageIndex(prevIndex);
+		setSelectedImage(images[prevIndex]);
+	};
 	const handleSelectImage = (index) => {
 		setImageIndex(index);
 		setSelectedImage(images[index]);
@@ -249,58 +311,82 @@ function BraceletDetails() {
 			</Card>
 
 			{/* Image Preview Dialog */}
-			<Dialog open={openDialog} onClose={handleCloseDialog} maxWidth="md">
+			<Dialog
+				open={openDialog}
+				onClose={handleCloseDialog}
+				PaperProps={{
+					sx: {
+						width: 1000,
+						height: 1000,
+						maxWidth: 'none',
+						margin: 'auto',
+						borderRadius: 3,
+						position: 'relative',
+						overflow: 'hidden',
+					},
+				}}
+			>
 				<DialogContent
 					sx={{
-						position: 'relative',
-						p: 0,
-						background: '#000',
-						textAlign: 'center',
-						height: '90vh',
-						width: '800px',
+						background: '#ffffff',
 						display: 'flex',
 						alignItems: 'center',
 						justifyContent: 'center',
+						padding: 4,
+						width: '100%',
+						height: '100%',
+						overflow: 'hidden',
 					}}
 				>
+					{/* Close Button */}
 					<IconButton
 						onClick={handleCloseDialog}
-						sx={{ position: 'absolute', right: 8, top: 8, color: 'white' }}
+						sx={{
+							...iconButtonStyle,
+							top: 16,
+							right: 16,
+						}}
 					>
 						<CloseIcon />
 					</IconButton>
+
+					{/* Prev Button */}
 					<IconButton
 						onClick={handlePrevImage}
 						sx={{
-							position: 'absolute',
-							left: 8,
+							...iconButtonStyle,
+							left: 20,
 							top: '50%',
 							transform: 'translateY(-50%)',
-							color: 'white',
 						}}
 					>
 						<ArrowBackIos />
 					</IconButton>
+					{/* Image */}
 					<img
 						src={selectedImage}
 						alt="Preview"
-						style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+						style={{
+							maxWidth: '90vw',
+							maxHeight: '90vh',
+							objectFit: 'contain',
+						}}
 					/>
+
+					{/* Next Button */}
 					<IconButton
 						onClick={handleNextImage}
 						sx={{
-							position: 'absolute',
-							right: 8,
+							...iconButtonStyle,
+							right: 20,
 							top: '50%',
 							transform: 'translateY(-50%)',
-							color: 'white',
 						}}
 					>
 						<ArrowForwardIos />
 					</IconButton>
 				</DialogContent>
 			</Dialog>
-
 			{/* Other Bracelets List */}
 			<Box sx={{ mt: 6 }}>
 				<Typography variant="h4" textAlign="center" gutterBottom>

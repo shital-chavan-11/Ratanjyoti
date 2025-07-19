@@ -29,7 +29,7 @@ const Twelvemukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/twelve muk
 const Thirteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi13')));
 const Fourteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi14')));
 const Fifteenmukhi = withLazyLoadably(lazy(() => import('@/pages/rudra/mukhi15')));
-const Malas = withLazyLoadably(lazy(() => import('@/pages/rudra/malas')));
+const Malas = withLazyLoadably(lazy(() => import('@/pages/malas/malas')));
 const Main = withLazyLoadably(lazy(() => import('@/pages/rudra/main')));
 const Maingem = withLazyLoadably(lazy(() => import('@/pages/gems/maingem')));
 const Dhanyog = withLazyLoadably(lazy(() => import('@/pages/brace/dhanyog')));

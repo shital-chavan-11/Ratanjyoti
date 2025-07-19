@@ -30,6 +30,7 @@ function NotificationsButton() {
 	const [likes, setLikes] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
+	const [likeCount, setLikeCount] = useState(0);
 
 	const open = Boolean(anchorEl);
 
@@ -59,32 +60,42 @@ function NotificationsButton() {
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
+	const fetchLikes = async () => {
+		const token = getAccessToken();
+		if (!token) {
+			setIsAuthenticated(false);
+			setLikes([]);
+			return;
+		}
 
+		setIsAuthenticated(true);
+		setLoading(true);
+
+		try {
+			const res = await axios.get(`${BASE_URL}/order/user/likes/`, {
+				headers: { Authorization: `Bearer ${token}` },
+			});
+			const userLikes = res.data.likes || [];
+			setLikes(userLikes);
+			setLikeCount(userLikes.length);
+		} catch (err) {
+			console.error('Failed to load likes:', err);
+			setIsAuthenticated(false);
+			setLikes([]);
+		} finally {
+			setLoading(false);
+		}
+	};
 	useEffect(() => {
-		const fetchLikes = async () => {
-			const token = getAccessToken();
-			if (!token) {
-				setIsAuthenticated(false);
-				return;
-			}
-
-			setIsAuthenticated(true);
-			setLoading(true);
-
-			try {
-				const res = await axios.get(`${BASE_URL}/order/user/likes/`, {
-					headers: { Authorization: `Bearer ${token}` },
-				});
-				setLikes(res.data.likes || []);
-			} catch (err) {
-				console.error('Failed to load likes:', err);
-				setIsAuthenticated(false);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchLikes();
+
+		// Listen to custom event when like is added
+		window.addEventListener('wishlistUpdated', fetchLikes);
+
+		// Cleanup
+		return () => {
+			window.removeEventListener('wishlistUpdated', fetchLikes);
+		};
 	}, []);
 
 	// ✅ Move conditional rendering logic outside JSX
@@ -96,7 +107,9 @@ function NotificationsButton() {
 			</Typography>
 		);
 	} else if (likes.length > 0) {
-		content = likes.slice(0, 5).map((item) => <LikeItem key={`${item.type}-${item.id}`} item={item} />);
+		content = likes
+			.slice(0, 5)
+			.map((item) => <LikeItem key={`${item.type}-${item.id}`} item={item} onClose={handleClose} />);
 	} else {
 		content = (
 			<Typography variant="body2" color="text.secondary">
@@ -162,7 +175,7 @@ function NotificationsButton() {
 					<Badge
 						color="secondary"
 						overlap="rectangular"
-						variant="dot"
+						badgeContent={likes.length} // ✅ shows actual number
 						invisible={!isAuthenticated || likes.length === 0}
 					>
 						<FavouriteIcon color="primary" fontSize="small" />
@@ -173,29 +186,45 @@ function NotificationsButton() {
 	);
 }
 
-function LikeItem({ item }) {
+function LikeItem({ item, onClose }) {
+	const navigate = useNavigate(); // No redeclaration issue now
+
+	const handleClick = () => {
+		// Closes the menu
+		if (item?.name) {
+			navigate(`/${item.name.toLowerCase().replace(/\s+/g, '-')}`);
+		}
+
+		onClose();
+	};
+
 	return (
 		<ButtonBase
+			onClick={handleClick}
 			sx={{
-				py: 1,
+				py: 1.5,
 				px: 2,
 				width: '100%',
 				textAlign: 'left',
 				borderLeft: 3,
 				borderLeftColor: 'primary.main',
+				alignItems: 'flex-start',
 				'&:hover': {
 					bgcolor: (theme) => alpha(theme.palette.primary.light, 0.1),
 				},
 			}}
 		>
-			<Stack direction="row" spacing={2} alignItems="center">
-				<Avatar>{item.name?.charAt(0)}</Avatar>
-				<Stack>
-					<Typography variant="body2">
-						<strong>{item.name}</strong> ({item.type})
+			<Stack direction="row" spacing={2} alignItems="center" width="100%">
+				<Avatar sx={{ width: 40, height: 40 }}>{item.name?.charAt(0)}</Avatar>
+				<Stack spacing={0.5} width="100%" overflow="hidden">
+					<Typography variant="body2" fontWeight="bold" noWrap sx={{ width: '100%' }}>
+						{item.name}{' '}
+						<Typography component="span" variant="caption" color="text.secondary">
+							({item.type})
+						</Typography>
 					</Typography>
-					<Typography variant="caption" color="text.secondary">
-						<AccessTimeIcon fontSize="inherit" sx={{ mr: 0.3 }} />
+					<Typography variant="caption" color="text.secondary" sx={{ display: 'flex', alignItems: 'center' }}>
+						<AccessTimeIcon fontSize="inherit" sx={{ mr: 0.5 }} />
 						{item.liked_at}
 					</Typography>
 				</Stack>

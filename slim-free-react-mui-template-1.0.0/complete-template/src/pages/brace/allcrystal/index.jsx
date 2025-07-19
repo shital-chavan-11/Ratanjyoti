@@ -153,7 +153,7 @@ function RudrakshaDetails() {
 								<Button variant="contained" color="primary" sx={{ mr: 2 }}>
 									Add to Cart
 								</Button>
-								<Button variant="outlined" color="secondary" sx={{ mr: 2 }}>
+								<Button variant="outlined" color="secondary" sx={{ mr: 2 }} zzz>
 									Buy Now
 								</Button>
 								<IconButton color="error">

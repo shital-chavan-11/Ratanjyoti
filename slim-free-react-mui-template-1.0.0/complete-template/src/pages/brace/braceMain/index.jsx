@@ -92,11 +92,24 @@ function BraceletPage() {
 	const handleLikeClick = async (productId) => {
 		try {
 			const token = localStorage.getItem('accessToken');
+
+			if (!token) {
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			const decoded = jwtDecode(token);
+			if (decoded.exp < Date.now() / 1000) {
+				localStorage.removeItem('accessToken');
+				navigate('/pages/login/simple');
+				return;
+			}
+
 			await axios.post(
 				'http://127.0.0.1:8000/order/toggle-like/',
 				{
 					id: productId,
-					model: 'bracelet', // ✅ Correct model here
+					model: 'bracelet',
 				},
 				{
 					headers: {
@@ -106,10 +119,13 @@ function BraceletPage() {
 				},
 			);
 
-			// Toggle locally for immediate UI feedback
+			// Toggle locally for UI feedback
 			setLikedItems((prev) =>
 				prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId],
 			);
+
+			// ✅ Trigger event so NotificationsButton updates immediately
+			window.dispatchEvent(new Event('wishlistUpdated'));
 		} catch (error) {
 			console.error('Error toggling like:', error);
 		}

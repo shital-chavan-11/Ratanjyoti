@@ -114,11 +114,25 @@ function RudrakshaPage() {
 	const handleLikeClick = async (productId) => {
 		try {
 			const token = localStorage.getItem('accessToken');
+			if (!token) {
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			const decoded = jwtDecode(token);
+			const isTokenExpired = decoded.exp < Date.now() / 1000;
+			if (isTokenExpired) {
+				localStorage.removeItem('accessToken');
+				navigate('/pages/login/simple');
+				return;
+			}
+
+			// Make API call to toggle like
 			const response = await axios.post(
 				'http://127.0.0.1:8000/order/toggle-like/',
 				{
 					id: productId,
-					model: 'rudraksha', // If dynamic, pass it as a parameter
+					model: 'rudraksha', // Make this dynamic if needed
 				},
 				{
 					headers: {
@@ -128,19 +142,21 @@ function RudrakshaPage() {
 				},
 			);
 
+			// Extract and update liked items
 			const updatedLikedIds = response.data?.liked_items;
 			if (Array.isArray(updatedLikedIds)) {
-				// Only update rudraksha likes and preserve others
 				setLikedItems((prev) => {
-					// Filter out old rudraksha likes
+					// Remove previous rudraksha likes, keep other model likes
 					const otherModelLikes = rudrakshaList.length
 						? prev.filter((id) => !rudrakshaList.some((r) => r.id === id))
 						: prev;
+
 					return [...otherModelLikes, ...updatedLikedIds];
 				});
 			} else {
 				console.error('liked_items is not an array:', updatedLikedIds);
 			}
+			window.dispatchEvent(new Event('wishlistUpdated'));
 		} catch (error) {
 			console.error('Error toggling like:', error);
 		}

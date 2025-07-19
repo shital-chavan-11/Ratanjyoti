@@ -29,15 +29,22 @@ function CartPage() {
 	const headers = {
 		Authorization: `Bearer ${token}`,
 	};
+
 	const fetchCart = async () => {
 		try {
 			const response = await axios.get('http://localhost:8000/order/cart/', { headers });
-			setCartItems(response.data.items || []);
+			setCartItems(
+				(response.data.items || []).map((item) => ({
+					...item,
+					selectedVariantId: item.variant_id, // ✅ Fix: map variant_id to selectedVariantId
+				})),
+			);
 		} catch (error) {
 			console.error('Error fetching cart:', error);
 			setSnackbarMessage('Failed to load cart.');
 		}
 	};
+
 	useEffect(() => {
 		if (!token) {
 			navigate('/pages/login/simple');
@@ -46,11 +53,18 @@ function CartPage() {
 		fetchCart();
 	}, [navigate]);
 
-	const handleQuantityChange = (action, item) => {
+	const handleQuantityChange = (action, itemIndex) => {
 		const urlMap = {
 			increase: 'http://localhost:8000/order/increase/',
 			decrease: 'http://localhost:8000/order/decrease/',
 		};
+
+		const item = cartItems[itemIndex];
+
+		if (!item) {
+			console.error('Item not found at index:', itemIndex);
+			return;
+		}
 
 		axios
 			.post(
@@ -58,12 +72,25 @@ function CartPage() {
 				{
 					product_type: item.product_type,
 					product_id: item.product_id,
+					variant_id: item.selectedVariantId ?? null, // Important for Gemstones
 				},
 				{ headers },
 			)
 			.then(() => {
 				setSnackbarMessage(`Quantity ${action}d`);
-				fetchCart();
+				const updatedCartItems = [...cartItems];
+
+				if (action === 'increase') {
+					updatedCartItems[itemIndex].quantity += 1;
+				} else if (action === 'decrease') {
+					if (updatedCartItems[itemIndex].quantity > 1) {
+						updatedCartItems[itemIndex].quantity -= 1;
+					} else {
+						updatedCartItems.splice(itemIndex, 1);
+					}
+				}
+
+				setCartItems(updatedCartItems);
 			})
 			.catch((err) => {
 				console.error(`${action} error:`, err);
@@ -78,12 +105,14 @@ function CartPage() {
 				{
 					product_type: item.product_type,
 					product_id: item.product_id,
+					variant_id: item.variant_id ?? null, // Also required for Gemstone
 				},
 				{ headers },
 			)
 			.then(() => {
-				setSnackbarMessage('Item removed from cart');
+				setSnackbarMessage('Item removed successfully');
 				fetchCart();
+				window.dispatchEvent(new Event('cart-updated'));
 			})
 			.catch((err) => {
 				console.error('Delete error:', err);
@@ -92,7 +121,6 @@ function CartPage() {
 	};
 
 	const handleBuyNow = (item) => {
-		// In production, redirect to actual checkout
 		setSnackbarMessage(`Proceeding to buy: ${item.product_name}`);
 	};
 
@@ -125,11 +153,29 @@ function CartPage() {
 									<Typography variant="h6" noWrap>
 										{item.product_name}
 									</Typography>
+
 									<Typography variant="body2" color="text.secondary">
-										Price: ₹{item.price}
+										Unit Price: ₹{item.price}
 									</Typography>
-									<Typography variant="body2" color="text.secondary">
-										Quantity: {item.quantity}
+
+									{/* Show Carat if Gemstone, otherwise Quantity */}
+									{item.product_type === 'Gemstone' ? (
+										<>
+											<Typography variant="body2" color="text.secondary">
+												Carat: {item.carat ?? 'N/A'} ct
+											</Typography>
+											<Typography variant="body2" color="text.secondary">
+												Quantity: {item.quantity}
+											</Typography>
+										</>
+									) : (
+										<Typography variant="body2" color="text.secondary">
+											Quantity: {item.quantity}
+										</Typography>
+									)}
+
+									<Typography variant="body2" color="text.primary" sx={{ fontWeight: 'bold', mt: 1 }}>
+										Total Price: ₹{item.price * item.quantity}
 									</Typography>
 								</CardContent>
 
@@ -137,16 +183,17 @@ function CartPage() {
 									<Box>
 										<IconButton
 											color="primary"
-											onClick={() => handleQuantityChange('decrease', item)}
+											onClick={() => handleQuantityChange('decrease', index)}
 										>
 											<RemoveIcon />
 										</IconButton>
 										<IconButton
 											color="primary"
-											onClick={() => handleQuantityChange('increase', item)}
+											onClick={() => handleQuantityChange('increase', index)}
 										>
 											<AddIcon />
 										</IconButton>
+
 										<IconButton color="primary" onClick={() => handleDelete(item)}>
 											<DeleteIcon />
 										</IconButton>
@@ -166,8 +213,12 @@ function CartPage() {
 				</Grid>
 			)}
 
-			{/* Snackbar outside loop */}
-			<Snackbar open={!!snackbarMessage} message={snackbarMessage} onClose={() => setSnackbarMessage('')} />
+			<Snackbar
+				open={!!snackbarMessage}
+				message={snackbarMessage}
+				onClose={() => setSnackbarMessage('')}
+				autoHideDuration={3000}
+			/>
 		</Container>
 	);
 }

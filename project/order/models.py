@@ -42,6 +42,8 @@ class CartItem(models.Model):
 
     bracelet = models.ForeignKey(Bracelet, on_delete=models.CASCADE, blank=True, null=True, related_name='bracelet_cart_items')
     gemstoneVariant = models.ForeignKey(GemstoneVariant, on_delete=models.CASCADE, blank=True, null=True, related_name='variant_cart_items')
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
 
     quantity = models.PositiveIntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -74,3 +76,13 @@ class CartItem(models.Model):
         elif self.bracelet:
             return f"{self.bracelet.name} x {self.quantity}"
         return "Empty Cart Item"
+    def save(self, *args, **kwargs):
+        if self.gemstone and self.gemstoneVariant:
+            self.price = self.gemstoneVariant.price * self.quantity
+        elif self.rudraksha:
+            self.price = self.rudraksha.price * self.quantity
+        elif self.bracelet:
+            self.price = self.bracelet.price * self.quantity
+        else:
+            self.price = 0
+        super().save(*args, **kwargs)
