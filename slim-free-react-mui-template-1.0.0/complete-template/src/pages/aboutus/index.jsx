@@ -1,9 +1,9 @@
 import { Container, Box, Typography, Divider } from '@mui/material';
-import topImage from '@/assets/images/hero1.jpg';
+// import topImage from '@/assets/images/hero1.jpg';
 import leftImage from '@/assets/images/common/founder.jpg';
 import rightImage from '@/assets/images/common/cofounder.jpg';
-import bottomImg1 from '@/assets/images/hero2.jpg';
-import bottomImg2 from '@/assets/images/hero3.jpg';
+// import bottomImg1 from '@/assets/images/hero2.jpg';
+// import bottomImg2 from '@/assets/images/hero3.jpg';
 import mehndiLeft from '@/assets/images/common/left.png';
 import mehndiRight from '@/assets/images/common/left1.png';
 import storyImage from '@/assets/images/common/ourstory_image.jpg';
