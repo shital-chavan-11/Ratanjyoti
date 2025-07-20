@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react';
 import * as path from 'path';
 
 export default defineConfig({
-	base: '/slim-free-react-mui-template',
+	base: '/',
 	plugins: [
 		react(),
 		// eslint() // ❌ also comment this out
