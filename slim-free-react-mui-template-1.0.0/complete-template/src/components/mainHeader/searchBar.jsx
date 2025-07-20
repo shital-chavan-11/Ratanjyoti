@@ -26,12 +26,12 @@ function SearchBar() {
 	const [error, setError] = useState(null);
 	const navigate = useNavigate();
 
-	const BASE_URL = 'http://localhost:8000/product';
+	const BASE_URL = 'https://ratanjyoti.onrender.com/product';
 
 	const getImageUrl = (image) => {
 		if (!image) return 'https://via.placeholder.com/150';
 		if (image.startsWith('http')) return image;
-		return `http://localhost:8000${image}`;
+		return `https://ratanjyoti.onrender.com${image}`;
 	};
 	const handleSearch = async (value) => {
 		setQuery(value);

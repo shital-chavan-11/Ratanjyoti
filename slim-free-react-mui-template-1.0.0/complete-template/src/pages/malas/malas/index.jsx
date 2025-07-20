@@ -112,13 +112,13 @@ function RudrakshaDetails() {
 	}, []);
 
 	useEffect(() => {
-		fetch('http://127.0.0.1:8000/product/rudraksha/') // Replace with actual endpoint
+		fetch(' https://ratanjyoti.onrender.com/product/rudraksha/') // Replace with actual endpoint
 			.then((res) => res.json())
 			.then((data) => setRudrakshaList(data.rudrakshas))
 			.catch((err) => console.error('Failed to fetch collection', err));
 	}, []);
 
-	const API_URL = 'http://127.0.0.1:8000/product/rudraksha/1 to 14 Mukhi Rudraksha Mala (Siddha Mala)/';
+	const API_URL = 'http://localhost:8000/product/rudraksha/1 to 14 Mukhi Rudraksha Mala (Siddha Mala)/';
 
 	useEffect(() => {
 		fetch(API_URL)

@@ -106,7 +106,7 @@ function BraceletPage() {
 			}
 
 			await axios.post(
-				'http://127.0.0.1:8000/order/toggle-like/',
+				'https://ratanjyoti.onrender.com/order/toggle-like/',
 				{
 					id: productId,
 					model: 'bracelet',
@@ -154,7 +154,7 @@ function BraceletPage() {
 		const fetchLikes = async () => {
 			try {
 				const token = localStorage.getItem('accessToken');
-				const response = await axios.get('http://127.0.0.1:8000/order/user/likes/', {
+				const response = await axios.get('https://ratanjyoti.onrender.com/order/user/likes/', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},

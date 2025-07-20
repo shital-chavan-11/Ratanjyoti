@@ -32,7 +32,7 @@ function CartPage() {
 
 	const fetchCart = async () => {
 		try {
-			const response = await axios.get('http://localhost:8000/order/cart/', { headers });
+			const response = await axios.get('https://ratanjyoti.onrender.com/order/cart/', { headers });
 			setCartItems(
 				(response.data.items || []).map((item) => ({
 					...item,
@@ -55,8 +55,8 @@ function CartPage() {
 
 	const handleQuantityChange = (action, itemIndex) => {
 		const urlMap = {
-			increase: 'http://localhost:8000/order/increase/',
-			decrease: 'http://localhost:8000/order/decrease/',
+			increase: 'https://ratanjyoti.onrender.com/order/increase/',
+			decrease: 'https://ratanjyoti.onrender.com/order/decrease/',
 		};
 
 		const item = cartItems[itemIndex];
@@ -101,7 +101,7 @@ function CartPage() {
 	const handleDelete = (item) => {
 		axios
 			.post(
-				'http://localhost:8000/order/remove/',
+				'https://ratanjyoti.onrender.com/order/remove/',
 				{
 					product_type: item.product_type,
 					product_id: item.product_id,

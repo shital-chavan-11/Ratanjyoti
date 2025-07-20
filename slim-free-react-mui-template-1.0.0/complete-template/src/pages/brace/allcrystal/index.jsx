@@ -33,7 +33,7 @@ function RudrakshaDetails() {
 	// Fetch specific bracelet
 	useEffect(() => {
 		const encodedName = encodeURIComponent(braceletName || 'Dhan Yog Bracelet'); // fallback
-		const API_URL = `http://localhost:8000/product/bracelet/${encodedName}/`;
+		const API_URL = `https://ratanjyoti.onrender.com/product/bracelet/${encodedName}/`;
 
 		fetch(API_URL)
 			.then((res) => {
@@ -54,7 +54,7 @@ function RudrakshaDetails() {
 
 	// Fetch all bracelets for list
 	useEffect(() => {
-		fetch('http://localhost:8000/product/bracelet/')
+		fetch('https://ratanjyoti.onrender.com/product/bracelet/')
 			.then((res) => res.json())
 			.then((data) => {
 				setBraceletList(data.bracelets);

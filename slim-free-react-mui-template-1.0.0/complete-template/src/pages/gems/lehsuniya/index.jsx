@@ -34,7 +34,7 @@ function GemstoneForm() {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await axios.get('http://localhost:8000/product/get-gemstone-variant/', {
+			const response = await axios.get('https://ratanjyoti.onrender.com//product/get-gemstone-variant/', {
 				params: { name, origin, carat },
 			});
 			setGemstoneData(response.data);

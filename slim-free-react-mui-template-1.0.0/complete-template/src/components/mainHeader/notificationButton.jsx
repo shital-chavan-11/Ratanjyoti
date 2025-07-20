@@ -22,7 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import FavouriteIcon from '@mui/icons-material/FavoriteOutlined';
 
-const BASE_URL = 'http://localhost:8000'; // Update for production
+const BASE_URL ='https://ratanjyoti.onrender.com'; // Update for production
 
 function NotificationsButton() {
 	const navigate = useNavigate();

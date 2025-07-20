@@ -21,7 +21,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
-const BASE_URL = 'http://localhost:8000';
+const BASE_URL = 'https://ratanjyoti.onrender.com';
 
 // --------------------------------
 // Cart Item Component (Clickable)

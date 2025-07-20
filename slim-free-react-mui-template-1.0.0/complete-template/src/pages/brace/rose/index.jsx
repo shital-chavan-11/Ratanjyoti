@@ -71,7 +71,7 @@ function BraceletDetails() {
 		const fetchLikes = async () => {
 			try {
 				const token = localStorage.getItem('accessToken');
-				const response = await axios.get('http://127.0.0.1:8000/order/user/likes/', {
+				const response = await axios.get('https://ratanjyoti.onrender.com/order/user/likes/', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -123,7 +123,7 @@ function BraceletDetails() {
 			}
 
 			await axios.post(
-				'http://127.0.0.1:8000/order/toggle-like/',
+				'https://ratanjyoti.onrender.com/order/toggle-like/',
 				{
 					id: productId,
 					model: 'bracelet',
@@ -162,7 +162,7 @@ function BraceletDetails() {
 			}
 
 			const res = await axios.post(
-				'http://127.0.0.1:8000/order/add/',
+				'https://ratanjyoti.onrender.com/order/add/',
 				{ product_type: 'Bracelet', product_id: rudrakshaData.id },
 				{ headers: { Authorization: `Bearer ${token}` } },
 			);

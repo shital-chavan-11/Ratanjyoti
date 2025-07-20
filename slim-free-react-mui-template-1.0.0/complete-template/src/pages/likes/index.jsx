@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, CardMedia, Typography, Button, Grid } from '@mui/material';
 
-const BASE_URL = 'http://localhost:8000'; // Update in production
+const BASE_URL = ' https://ratanjyoti.onrender.com'; // Update in production
 
 function LikesPage() {
 	const [likedItems, setLikedItems] = useState([]);

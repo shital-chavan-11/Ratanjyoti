@@ -40,7 +40,7 @@ function BraceletDetails() {
 	// Fetch specific bracelet
 	useEffect(() => {
 		const encodedName = encodeURIComponent(braceletName || 'Amethyst Bracelet');
-		const API_URL = `http://localhost:8000/product/bracelet/${encodedName}/`;
+		const API_URL = `https://ratanjyoti.onrender.com/product/bracelet/${encodedName}/`;
 
 		fetch(API_URL)
 			.then((res) => {
@@ -61,7 +61,7 @@ function BraceletDetails() {
 
 	// Fetch all bracelets
 	useEffect(() => {
-		fetch('http://localhost:8000/product/bracelet/')
+		fetch('https://ratanjyoti.onrender.com/product/bracelet/')
 			.then((res) => res.json())
 			.then((data) => setBraceletList(data.bracelets))
 			.catch((err) => console.error('Error loading bracelet list:', err));
@@ -71,7 +71,7 @@ function BraceletDetails() {
 		const fetchLikes = async () => {
 			try {
 				const token = localStorage.getItem('accessToken');
-				const response = await axios.get('http://127.0.0.1:8000/order/user/likes/', {
+				const response = await axios.get('https://ratanjyoti.onrender.com/order/user/likes/', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -105,7 +105,7 @@ function BraceletDetails() {
 			}
 
 			await axios.post(
-				'http://127.0.0.1:8000/order/toggle-like/',
+				'https://ratanjyoti.onrender.com/order/toggle-like/',
 				{
 					id: productId,
 					model: 'bracelet',
@@ -144,7 +144,7 @@ function BraceletDetails() {
 			}
 
 			const res = await axios.post(
-				'http://127.0.0.1:8000/order/add/',
+				'https://ratanjyoti.onrender.com/order/add/',
 				{ product_type: 'Bracelet', product_id: rudrakshaData.id },
 				{ headers: { Authorization: `Bearer ${token}` } },
 			);

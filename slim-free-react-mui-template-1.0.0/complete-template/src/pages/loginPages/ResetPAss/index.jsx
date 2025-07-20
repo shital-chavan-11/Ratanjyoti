@@ -43,7 +43,7 @@ function ResetPassword() {
 
 		setIsSubmitting(true);
 		try {
-			const res = await fetch('http://localhost:8000/auth/forgot-password/', {
+			const res = await fetch(' https://ratanjyoti.onrender.com/auth/forgot-password/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email }),
@@ -73,7 +73,7 @@ function ResetPassword() {
 
 		setIsSubmitting(true);
 		try {
-			const res = await fetch('http://localhost:8000/auth/reset-password/', {
+			const res = await fetch(' https://ratanjyoti.onrender.com/auth/reset-password/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email, otp, new_password: newPassword }),

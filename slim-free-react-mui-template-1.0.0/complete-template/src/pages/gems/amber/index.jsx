@@ -37,7 +37,7 @@ function GemstoneForm() {
 
 	const handleSubmit = async () => {
 		try {
-			const response = await axios.get('http://localhost:8000/product/get-gemstone-variant/', {
+			const response = await axios.get('https://ratanjyoti.onrender.com/product/get-gemstone-variant/', {
 				params: { name, origin, carat },
 			});
 			setGemstoneData(response.data);
@@ -74,7 +74,7 @@ function GemstoneForm() {
 			}
 
 			const response = await axios.post(
-				'http://127.0.0.1:8000/order/add/',
+				'https://ratanjyoti.onrender.com/order/add/',
 				{
 					product_type: 'Gemstone',
 					product_id: gemstoneData.gemstone_id,

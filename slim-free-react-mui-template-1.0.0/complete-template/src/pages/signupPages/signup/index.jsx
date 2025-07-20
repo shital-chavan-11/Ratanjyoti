@@ -89,7 +89,7 @@ function SignupPage() {
 							}
 							title="Sign Up Using Google"
 							onClick={() => {
-								window.location.href = 'http://127.0.0.1:8000/accounts/google/login/';
+								window.location.href = ' https://ratanjyoti.onrender.com/accounts/google/login/';
 							}}
 						/>
 
@@ -196,7 +196,7 @@ function LoginForm() {
 		};
 
 		try {
-			const response = await fetch('http://127.0.0.1:8000/auth/signup/', {
+			const response = await fetch(' https://ratanjyoti.onrender.com/auth/signup/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify(payload),

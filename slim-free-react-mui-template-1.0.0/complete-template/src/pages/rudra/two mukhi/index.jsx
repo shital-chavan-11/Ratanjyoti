@@ -75,7 +75,7 @@ function RudrakshaDetails() {
 
 			// Make API call to toggle like
 			const response = await axios.post(
-				'http://127.0.0.1:8000/order/toggle-like/',
+				' https://ratanjyoti.onrender.com/order/toggle-like/',
 				{
 					id: productId,
 					model: 'rudraksha', // Make this dynamic if needed
@@ -112,7 +112,7 @@ function RudrakshaDetails() {
 		const fetchLikedItems = async () => {
 			try {
 				const token = localStorage.getItem('accessToken');
-				const response = await axios.get('http://127.0.0.1:8000/order/user/likes/', {
+				const response = await axios.get(' https://ratanjyoti.onrender.com/order/user/likes/', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -131,13 +131,13 @@ function RudrakshaDetails() {
 	}, []);
 
 	useEffect(() => {
-		fetch('http://127.0.0.1:8000/product/rudraksha/') // Replace with actual endpoint
+		fetch(' https://ratanjyoti.onrender.com/product/rudraksha/') // Replace with actual endpoint
 			.then((res) => res.json())
 			.then((data) => setRudrakshaList(data.rudrakshas))
 			.catch((err) => console.error('Failed to fetch collection', err));
 	}, []);
 
-	const API_URL = 'http://127.0.0.1:8000/product/rudraksha/Natural  2 Mukhi Rudraksha Savar (Nepali)/';
+	const API_URL = ' https://ratanjyoti.onrender.com/product/rudraksha/Natural  2 Mukhi Rudraksha Savar (Nepali)/';
 
 	useEffect(() => {
 		fetch(API_URL)
@@ -189,7 +189,7 @@ function RudrakshaDetails() {
 			}
 
 			const response = await axios.post(
-				'http://127.0.0.1:8000/order/add/',
+				' https://ratanjyoti.onrender.com/order/add/',
 				{
 					product_type: 'Rudraksha',
 					product_id: rudrakshaData.id,
