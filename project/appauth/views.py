@@ -54,12 +54,16 @@ class SignUpView(View):
             OTPRecord.objects.create(user=user, otp=otp)
 
             # Send email
-            send_mail(
-                subject="Verify Your Email - OTP Inside",
-                message=f"Your OTP is: {otp}. It is valid for 10 minutes.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-            )
+            sent = send_mail(
+            subject="Verify Your Email - OTP Inside",
+            message=f"Your OTP is: {otp}. It is valid for 10 minutes.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,  # Important!
+)
+
+            if sent == 0:
+                return JsonResponse({'error': 'Failed to send OTP email.'}, status=500)
 
             # Store session for OTP verification step
             request.session['user_email'] = email
