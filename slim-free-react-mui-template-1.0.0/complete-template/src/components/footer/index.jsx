@@ -217,7 +217,7 @@ function Footer() {
 							<Stack spacing={1} mt={2}>
 								<Typography variant="h6">Company</Typography>
 								<Link
-									href="/slim-free-react-mui-template/aboutus"
+									href="/aboutus"
 									underline="hover"
 									color="text.primary"
 								>

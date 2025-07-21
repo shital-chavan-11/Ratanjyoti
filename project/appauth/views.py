@@ -11,8 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from appauth.models import CustomUser, OTPRecord  # Make sure these are imported
 
-from __future__ import print_function
-import random, json
+import json, random
 from django.views import View
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -22,12 +21,14 @@ from django.core.mail import send_mail
 
 from .models import CustomUser, OTPRecord
 
-# Import Brevo dependencies
+# Brevo campaign API
 import sib_api_v3_sdk
 from sib_api_v3_sdk.rest import ApiException
 
+
 def generate_otp():
     return str(random.randint(100000, 999999))
+
 
 @method_decorator(csrf_exempt, name='dispatch')
 class SignUpView(View):
@@ -43,6 +44,7 @@ class SignUpView(View):
             password = data.get('password')
             confirm_password = data.get('confirm_password')
 
+            # Validations
             if not all([first_name, last_name, birth_date, email, mobile, password, confirm_password]):
                 return JsonResponse({'error': 'All fields are required'}, status=400)
 
@@ -52,57 +54,54 @@ class SignUpView(View):
             if CustomUser.objects.filter(email=email).exists():
                 return JsonResponse({'error': 'Email already exists'}, status=400)
 
-            # Create user
+            # Create user (inactive initially)
             user = CustomUser.objects.create_user(
                 first_name=first_name,
                 last_name=last_name,
                 birth_date=birth_date,
                 email=email,
                 mobile=mobile,
-                is_active=False,
-                password=password
+                password=password,
+                is_active=False
             )
 
+            # Generate and store OTP
             otp = generate_otp()
             OTPRecord.objects.create(user=user, otp=otp)
 
-            # Send OTP email
-            sent = send_mail(
-                subject="Verify Your Email - OTP Inside",
-                message=f"Your OTP is: {otp}. It is valid for 10 minutes.",
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            # Send OTP via Brevo SMTP
+            try:
+                send_mail(
+                    subject="Verify Your Email - OTP Inside",
+                    message=f"Your OTP is: {otp}. It is valid for 10 minutes.",
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+            except Exception as e:
+                return JsonResponse({'error': f'Failed to send OTP email: {str(e)}'}, status=500)
 
-            if sent == 0:
-                return JsonResponse({'error': 'Failed to send OTP email.'}, status=500)
-
-            # Store for verification
+            # Save user session
             request.session['user_email'] = email
             request.session.modified = True
 
-            # ✅ Optional: Send a campaign via Brevo
+            # Optional: Create welcome campaign via Brevo API
             try:
                 configuration = sib_api_v3_sdk.Configuration()
                 configuration.api_key['api-key'] = settings.BREVO_API_KEY
-
-  # Replace with real one
 
                 api_instance = sib_api_v3_sdk.EmailCampaignsApi(sib_api_v3_sdk.ApiClient(configuration))
 
                 campaign = sib_api_v3_sdk.CreateEmailCampaign(
                     name="Welcome Campaign",
                     subject="🎉 Welcome to Our Platform!",
-                    sender={"name": "RatanJyoyi", "email": "ratanjyoti001@gmail.com"},
+                    sender={"name": "RatanJyoti", "email": settings.DEFAULT_FROM_EMAIL.split('<')[1][:-1]},
                     type="classic",
                     html_content="<html><body><h2>Thanks for signing up! 🎉</h2></body></html>",
-                    recipients={"listIds": [2]},  # Replace with your list ID
-                   
+                    recipients={"listIds": [2]},  # Change to your actual list ID
                 )
 
                 api_instance.create_email_campaign(campaign)
-
             except ApiException as e:
                 print(f"Brevo Campaign API error: {e}")
 
@@ -110,6 +109,7 @@ class SignUpView(View):
 
         except Exception as e:
             return JsonResponse({'error': f'Server error: {str(e)}'}, status=500)
+
 
 
 @method_decorator(csrf_exempt, name='dispatch')

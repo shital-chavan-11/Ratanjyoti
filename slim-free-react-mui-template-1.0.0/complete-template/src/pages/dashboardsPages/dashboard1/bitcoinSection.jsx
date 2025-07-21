@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import CardActionArea from '@mui/material/CardActionArea';
 
-import bitcoin1 from '@/assets/images/gemstones/gemstones.jpg';
+import bitcoin1 from '@/assets/images/gemstones/gemstones_product.jpg';
 import bitcoin2 from '@/assets/images/bracelets/bracelet.jpg';
 import bitcoin3 from '@/assets/images/rudra/rudra1.webp';
 import mehndiLeft from '@/assets/images/common/left.png'; // custom mehndi design
@@ -48,8 +48,8 @@ function BitcoinCard({ img, title, description, buttonText, link }) {
 						src={img}
 						alt={title}
 						style={{
-							width: '300px', // fixed width
-							height: '200px', // fixed height
+							width: '100%', // fixed width
+							height: '300px', // fixed height
 							objectFit: 'cover', // makes the image fit nicely inside the box
 							transition: 'transform 0.3s ease-in-out',
 							touchAction: 'manipulation',
