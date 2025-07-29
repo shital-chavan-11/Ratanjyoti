@@ -27,7 +27,7 @@ function Profile() {
 		}
 
 		axios
-			.get('http://localhost:8000/auth/user/edit/', {
+			.get('ratanjyoti.onrender.com/auth/user/edit/', {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -56,7 +56,7 @@ function Profile() {
 		const token = localStorage.getItem('accessToken');
 
 		axios
-			.patch('http://localhost:8000/auth/user/edit/', form, {
+			.patch('ratanjyoti.onrender.com/auth/user/edit/', form, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
