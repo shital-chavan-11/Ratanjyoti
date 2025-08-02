@@ -92,27 +92,21 @@ function UserMenu({ anchorEl, handleClose }) {
 	const navigate = useNavigate();
 
 	const handleLogout = async () => {
-		try {
-			const accessToken = localStorage.getItem('accessToken');
-			const refreshToken = localStorage.getItem('refreshToken');
+	try {
+		// Just call logout endpoint with credentials
+		await axios.post(
+			'https://api.ratanjyoti.in/auth/logout/',
+			{},
+			{ withCredentials: true }
+		);
 
-			await axios.post(
-				'https://api.ratanjyoti.in/auth/logout/',
-				{ refresh: refreshToken },
-				{
-					headers: {
-						Authorization: `Bearer ${accessToken}`,
-					},
-				},
-			);
+		// Redirect to login (no localStorage token to clear now)
+		navigate('/pages/login/simple');
+	} catch (error) {
+		console.error('Logout failed:', error);
+	}
+};
 
-			localStorage.removeItem('accessToken');
-			localStorage.removeItem('refreshToken');
-			navigate('/pages/login/simple');
-		} catch (error) {
-			console.error('Logout failed:', error);
-		}
-	};
 
 	return (
 		<Menu
