@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { TextField, Button, Box, Snackbar, Alert, Typography, CircularProgress, Stack, Paper } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../../utils/axiosInstance'; // ✅ Adjust path if needed
 
 function Profile() {
 	const [form, setForm] = useState({
@@ -14,24 +14,11 @@ function Profile() {
 	const [originalForm, setOriginalForm] = useState(null);
 	const [loading, setLoading] = useState(true);
 	const [isEditing, setIsEditing] = useState(false);
-	const navigate = useNavigate();
 	const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
+	const navigate = useNavigate();
 
 	useEffect(() => {
-		const token = localStorage.getItem('accessToken');
-
-		// Redirect to login if no token found
-		if (!token) {
-			navigate('/pages/login/simple');
-			return;
-		}
-
-		axios
-			.get('ratanjyoti.onrender.com/auth/user/edit/', {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
+		axiosInstance.get('/auth/user/edit/')
 			.then((res) => {
 				setForm(res.data);
 				setOriginalForm(res.data);
@@ -39,8 +26,6 @@ function Profile() {
 			.catch((err) => {
 				setSnackbar({ open: true, message: 'Failed to load profile', severity: 'error' });
 				if (err.response?.status === 401) {
-					localStorage.removeItem('accessToken');
-					localStorage.removeItem('refreshToken');
 					navigate('/pages/login/simple');
 				}
 			})
@@ -53,14 +38,7 @@ function Profile() {
 	};
 
 	const handleSubmit = () => {
-		const token = localStorage.getItem('accessToken');
-
-		axios
-			.patch('ratanjyoti.onrender.com/auth/user/edit/', form, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			})
+		axiosInstance.patch('/auth/user/edit/', form)
 			.then((res) => {
 				setForm(res.data.user);
 				setOriginalForm(res.data.user);
@@ -86,76 +64,26 @@ function Profile() {
 				<Typography variant="h5" gutterBottom align="center">
 					Profile
 				</Typography>
-				<TextField
-					fullWidth
-					label="First Name"
-					name="first_name"
-					value={form.first_name}
-					onChange={handleChange}
-					margin="normal"
-					disabled={!isEditing}
-				/>
-				<TextField
-					fullWidth
-					label="Last Name"
-					name="last_name"
-					value={form.last_name}
-					onChange={handleChange}
-					margin="normal"
-					disabled={!isEditing}
-				/>
-				<TextField
-					fullWidth
-					label="Birth Date"
-					name="birth_date"
-					type="date"
-					value={form.birth_date}
-					onChange={handleChange}
-					margin="normal"
-					InputLabelProps={{ shrink: true }}
-					disabled={!isEditing}
-				/>
-				<TextField
-					fullWidth
-					label="Email"
-					name="email"
-					value={form.email}
-					margin="normal"
-					InputProps={{ readOnly: true }}
-				/>
-				<TextField
-					fullWidth
-					label="Mobile"
-					name="mobile"
-					value={form.mobile}
-					onChange={handleChange}
-					margin="normal"
-					disabled={!isEditing}
-				/>
+
+				<TextField label="First Name" fullWidth name="first_name" value={form.first_name} onChange={handleChange} margin="normal" disabled={!isEditing} />
+				<TextField label="Last Name" fullWidth name="last_name" value={form.last_name} onChange={handleChange} margin="normal" disabled={!isEditing} />
+				<TextField label="Birth Date" fullWidth type="date" name="birth_date" value={form.birth_date} onChange={handleChange} InputLabelProps={{ shrink: true }} margin="normal" disabled={!isEditing} />
+				<TextField label="Email" fullWidth name="email" value={form.email} margin="normal" InputProps={{ readOnly: true }} />
+				<TextField label="Mobile" fullWidth name="mobile" value={form.mobile} onChange={handleChange} margin="normal" disabled={!isEditing} />
 
 				<Stack direction="row" spacing={2} sx={{ mt: 3 }} justifyContent="center">
 					{isEditing ? (
 						<>
-							<Button variant="contained" color="primary" onClick={handleSubmit}>
-								Save Changes
-							</Button>
-							<Button variant="outlined" color="secondary" onClick={handleCancel}>
-								Cancel
-							</Button>
+							<Button variant="contained" color="primary" onClick={handleSubmit}>Save Changes</Button>
+							<Button variant="outlined" color="secondary" onClick={handleCancel}>Cancel</Button>
 						</>
 					) : (
-						<Button variant="contained" onClick={() => setIsEditing(true)}>
-							Edit Profile
-						</Button>
+						<Button variant="contained" onClick={() => setIsEditing(true)}>Edit Profile</Button>
 					)}
 				</Stack>
 			</Paper>
 
-			<Snackbar
-				open={snackbar.open}
-				autoHideDuration={4000}
-				onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}
-			>
+			<Snackbar open={snackbar.open} autoHideDuration={4000} onClose={() => setSnackbar((prev) => ({ ...prev, open: false }))}>
 				<Alert severity={snackbar.severity}>{snackbar.message}</Alert>
 			</Snackbar>
 		</Box>

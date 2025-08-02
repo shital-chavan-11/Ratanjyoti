@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Card from '@mui/material/Card';
@@ -12,6 +11,7 @@ import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import LoginIcon from '@mui/icons-material/Login';
 import SendIcon from '@mui/icons-material/Send';
+import axiosInstance from '@/utils/axiosInstance';
 
 const Alert = React.forwardRef((props, ref) => <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />);
 
@@ -43,55 +43,60 @@ function ResetPassword() {
 
 		setIsSubmitting(true);
 		try {
-			const res = await fetch(' https://ratanjyoti.onrender.com/auth/forgot-password/', {
+			const res = await axiosInstance.post(' https://ratanjyoti.onrender.com/auth/forgot-password/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email }),
 			});
-			const data = await res.json();
-
-			if (res.ok) {
-				setSnackbar({ open: true, message: data.message || 'OTP sent to your email.', severity: 'success' });
-				setOtpSent(true);
-			} else {
-				setSnackbar({ open: true, message: data.error || 'Failed to send OTP.', severity: 'error' });
-			}
+			setSnackbar({
+			open: true,
+			message: res.data.message || 'OTP sent to your email.',
+			severity: 'success',
+		});
 		} catch (err) {
-			setSnackbar({ open: true, message: 'Network error. Try again.', severity: 'error' });
-		} finally {
-			setIsSubmitting(false);
-		}
+		setSnackbar({
+			open: true,
+			message: err.response?.data?.error || 'Failed to send OTP.',
+			severity: 'error',
+		});
+	} finally {
+		setIsSubmitting(false);
+	}
 	};
 
 	const handleResetPassword = async (e) => {
-		e.preventDefault();
+	e.preventDefault();
 
-		if (!email || !otp || !newPassword) {
-			setSnackbar({ open: true, message: 'All fields are required.', severity: 'warning' });
-			return;
-		}
+	if (!email || !otp || !newPassword) {
+		setSnackbar({ open: true, message: 'All fields are required.', severity: 'warning' });
+		return;
+	}
 
-		setIsSubmitting(true);
-		try {
-			const res = await fetch(' https://ratanjyoti.onrender.com/auth/reset-password/', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, otp, new_password: newPassword }),
-			});
-			const data = await res.json();
+	setIsSubmitting(true);
+	try {
+		const res = await axiosInstance.post('/auth/reset-password/', {
+			email,
+			otp,
+			new_password: newPassword,
+		});
 
-			if (res.ok) {
-				setSnackbar({ open: true, message: data.message || 'Password reset successful!', severity: 'success' });
-				setTimeout(() => navigate('/pages/login/simple'), 1500);
-			} else {
-				setSnackbar({ open: true, message: data.error || 'Failed to reset password.', severity: 'error' });
-			}
-		} catch (err) {
-			setSnackbar({ open: true, message: 'Network error. Try again.', severity: 'error' });
-		} finally {
-			setIsSubmitting(false);
-		}
-	};
+		setSnackbar({
+			open: true,
+			message: res.data.message || 'Password reset successful!',
+			severity: 'success',
+		});
+
+		setTimeout(() => navigate('/pages/login/simple'), 1500);
+	} catch (err) {
+		setSnackbar({
+			open: true,
+			message: err.response?.data?.error || 'Failed to reset password.',
+			severity: 'error',
+		});
+	} finally {
+		setIsSubmitting(false);
+	}
+};
 
 	return (
 		<Container>

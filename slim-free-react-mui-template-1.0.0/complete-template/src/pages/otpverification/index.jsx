@@ -1,9 +1,17 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-// MUI
-import { Typography, TextField, Button, CircularProgress, Card, Stack, Snackbar, Alert } from '@mui/material';
+import {
+	Typography,
+	TextField,
+	Button,
+	CircularProgress,
+	Card,
+	Stack,
+	Snackbar,
+	Alert,
+} from '@mui/material';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import axiosInstance from '../../utils/axiosInstance'; // Adjust path if needed
 
 function OTPVerification() {
 	return (
@@ -11,12 +19,7 @@ function OTPVerification() {
 			elevation={20}
 			sx={{
 				display: 'block',
-				width: {
-					xs: '95%',
-					sm: '55%',
-					md: '35%',
-					lg: '25%',
-				},
+				width: { xs: '95%', sm: '55%', md: '35%', lg: '25%' },
 				p: 4,
 				mt: 8,
 				mx: 'auto',
@@ -28,7 +31,7 @@ function OTPVerification() {
 						OTP Verification
 					</Typography>
 					<Typography variant="body2" color="textSecondary" textAlign="center">
-						Enter the OTP sent to your registered mobile/email.
+						Enter the OTP sent to your registered email.
 					</Typography>
 				</div>
 
@@ -46,31 +49,23 @@ function OTPForm() {
 	const [isResending, setIsResending] = useState(false);
 	const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-	const handleCloseSnackbar = () => {
-		setSnackbar({ ...snackbar, open: false });
-	};
+	const handleCloseSnackbar = () => setSnackbar({ ...snackbar, open: false });
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setIsLoading(true);
 
 		try {
-			const response = await fetch(' https://ratanjyoti.onrender.com/auth/verify-otp/', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email, otp }),
-			});
+			const response = await axiosInstance.post('/auth/verify-otp/', { email, otp });
 
-			const data = await response.json();
-
-			if (response.ok) {
-				setSnackbar({ open: true, message: 'OTP verified successfully!', severity: 'success' });
-				setTimeout(() => navigate('/pages/login/simple'), 1500);
-			} else {
-				setSnackbar({ open: true, message: data.error || 'OTP verification failed', severity: 'error' });
-			}
+			setSnackbar({ open: true, message: 'OTP verified successfully!', severity: 'success' });
+			setTimeout(() => navigate('/pages/login/simple'), 1500);
 		} catch (error) {
-			setSnackbar({ open: true, message: 'Something went wrong', severity: 'error' });
+			setSnackbar({
+				open: true,
+				message: error.response?.data?.error || 'OTP verification failed',
+				severity: 'error',
+			});
 		} finally {
 			setIsLoading(false);
 		}
@@ -83,22 +78,21 @@ function OTPForm() {
 		}
 
 		setIsResending(true);
+
 		try {
-			const response = await fetch(' https://ratanjyoti.onrender.comauth/resend-otp/', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ email }),
+			const response = await axiosInstance.post('/auth/resend-otp/', { email });
+
+			setSnackbar({
+				open: true,
+				message: response.data.message || 'OTP resent successfully.',
+				severity: 'success',
 			});
-
-			const data = await response.json();
-
-			if (response.ok) {
-				setSnackbar({ open: true, message: data.message || 'OTP resent successfully.', severity: 'success' });
-			} else {
-				setSnackbar({ open: true, message: data.error || 'Failed to resend OTP.', severity: 'error' });
-			}
 		} catch (err) {
-			setSnackbar({ open: true, message: 'Network error. Try again.', severity: 'error' });
+			setSnackbar({
+				open: true,
+				message: err.response?.data?.error || 'Failed to resend OTP.',
+				severity: 'error',
+			});
 		} finally {
 			setIsResending(false);
 		}
@@ -112,7 +106,6 @@ function OTPForm() {
 						name="email"
 						type="email"
 						label="Email"
-						variant="outlined"
 						fullWidth
 						required
 						value={email}
@@ -123,12 +116,10 @@ function OTPForm() {
 						name="otp"
 						type="number"
 						label="Enter OTP"
-						variant="outlined"
 						fullWidth
 						required
 						value={otp}
 						onChange={(e) => setOtp(e.target.value)}
-						inputProps={{ maxLength: 6 }}
 					/>
 
 					<Typography variant="body2" color="text.secondary" textAlign="center">
@@ -139,9 +130,8 @@ function OTPForm() {
 						type="submit"
 						variant="contained"
 						fullWidth
-						color="primary"
 						disabled={isLoading}
-						endIcon={isLoading ? <CircularProgress color="inherit" size={20} /> : <VerifiedIcon />}
+						endIcon={isLoading ? <CircularProgress size={20} /> : <VerifiedIcon />}
 						sx={{
 							textTransform: 'uppercase',
 							color: 'primary.contrastText',

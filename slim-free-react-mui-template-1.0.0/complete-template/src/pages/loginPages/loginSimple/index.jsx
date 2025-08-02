@@ -95,6 +95,7 @@ function LoginForm() {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({ email, password }),
+				credentials: 'include',
 			});
 
 			if (!response.ok) {
@@ -103,10 +104,6 @@ function LoginForm() {
 
 			const data = await response.json();
 			console.log('Login successful:', data);
-
-			// Save access and refresh tokens in localStorage
-			localStorage.setItem('accessToken', data.access);
-			localStorage.setItem('refreshToken', data.refresh);
 
 			navigate('/');
 		} catch (err) {
