@@ -89,7 +89,7 @@ function LoginForm() {
 		setError('');
 
 		try {
-			const response = await fetch('https://ratanjyoti.onrender.com/auth/signin/', {
+			const response = await fetch('https://api.ratanjyoti.in/auth/signin/', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ function LoginForm() {
 				credentials: 'include',
 			});
 
-			if (!response.ok) {
+			if (!response.ok) { 
 				throw new Error('Invalid credentials');
 			}
 

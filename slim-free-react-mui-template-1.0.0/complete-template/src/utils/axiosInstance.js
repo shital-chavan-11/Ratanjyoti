@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-	baseURL: 'https://ratanjyoti.onrender.com',
+	baseURL: 'https://api.ratanjyoti.in',
 	withCredentials: true, // ✅ Automatically send cookies (access/refresh)
 	headers: {
 		'Content-Type': 'application/json',
@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
 			try {
 				// ✅ Request refresh from cookie (no refresh token in body!)
 				await axios.post(
-					'https://ratanjyoti.onrender.com/auth/refresh/',
+					'https://api.ratanjyoti.in/auth/refresh/',
 					{},
 					{ withCredentials: true }
 				);

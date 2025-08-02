@@ -43,7 +43,7 @@ function ResetPassword() {
 
 		setIsSubmitting(true);
 		try {
-			const res = await axiosInstance.post(' https://ratanjyoti.onrender.com/auth/forgot-password/', {
+			const res = await axiosInstance.post(' https://api.ratanjyoti.in/auth/forgot-password/', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ email }),

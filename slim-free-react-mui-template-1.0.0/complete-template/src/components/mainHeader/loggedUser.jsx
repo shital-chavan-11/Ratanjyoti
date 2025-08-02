@@ -97,7 +97,7 @@ function UserMenu({ anchorEl, handleClose }) {
 			const refreshToken = localStorage.getItem('refreshToken');
 
 			await axios.post(
-				'https://ratanjyoti.onrender.com/auth/logout/',
+				'https://api.ratanjyoti.in/auth/logout/',
 				{ refresh: refreshToken },
 				{
 					headers: {
